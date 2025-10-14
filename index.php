@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - Dewi Bootstrap Template</title>
+  <title>Página Inicial</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -38,48 +38,7 @@
 
 <body class="index-page">
 
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
-
-      <a href="index.html" class="logo d-flex align-items-center me-auto">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
-        <img src="assets/img/aurabank_logo.png" alt="">
-      </a>
-
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a href="#hero" class="active">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
-          <li><a href="#team">Team</a></li>
-          <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-
-      <a class="cta-btn" href="index.html#about">Get Started</a>
-
-    </div>
-  </header>
+  <?php include 'assets/php/navbar.php'?>
 
   <main class="main">
 
@@ -93,8 +52,8 @@
         <h2 data-aos="fade-up" data-aos-delay="100">FARME SUA AURA</h2>
         <p data-aos="fade-up" data-aos-delay="200">We are team of talented designers making websites with Bootstrap</p>
         <div class="d-flex mt-4" style="gap: 2rem;" data-aos="fade-up" data-aos-delay="300">
-          <a href="cadastro.html" class="btn-get-started">Cadastre-se</a>
-          <a href="login.html" class="btn-login">Entre</a>
+          <a href="cadastro.php" class="btn-get-started">Cadastre-se</a>
+          <a href="login.php" class="btn-login">Entre</a>
         </div>
       </div>
 
