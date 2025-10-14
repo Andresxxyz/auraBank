@@ -1830,6 +1830,21 @@ section,
   color: var(--accent-color);
 }
 
+.tabela-aura{
+  display: flexbox;
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border-radius: 8px;
+  overflow: auto;
+  margin-bottom: 20px;
+  background-color: rgba(128, 128, 128, 0.11);
+}
+.pop-up-add-aura{
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  
+}
 /*--------------------------------------------------------------
 # Starter Section Section
 --------------------------------------------------------------*/
