@@ -1,0 +1,30 @@
+cadastro
+ - confirmar email
+
+login
+
+entrar comunidade
+ - encontrar comunidade 
+  - colocar codigo 
+
+vizualizar membros
+
+vizualizar auras
+
+dar e tirar aura
+ - quantidade e motivo
+
+aceitar ou rejeitar acao de dar e tirar aura 
+
+vizualizar rank de aura
+
+// adicionais
+
+meu perfil
+ - foto
+ - nome usuario
+ ver minha aura
+ ver minha comunidade
+
+adm de comunidade 
+ - editar, excluir, por foto
