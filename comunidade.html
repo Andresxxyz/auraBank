@@ -26,6 +26,8 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
+  <!-- Auto-resize textarea styles -->
+
 
   <!-- =======================================================
   * Template Name: Dewi
@@ -41,7 +43,7 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-      <a href="index.html" class="logo d-flex align-items-center me-auto">
+      <a href="index.php" class="logo d-flex align-items-center me-auto">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
         <img src="assets/img/aurabank_logo.png" alt="">
@@ -103,6 +105,7 @@
 
             <h4>Menu de Aura </h4>
             <p>Nesta seção, você pode adicionar ou remover a aura de usuários.</p>
+            
           </div>
 
           <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
@@ -116,18 +119,23 @@
                 <td>João Silva</td>
                 <td>1500</td>
                 <td>
-                  <button class="btn btn-primary btn-sm" id="btn-pop-up-add-aura">Adicionar Aura</button>
-                  <button class="btn btn-danger btn-sm">Remover Aura</button>
+                  <button class="btn btn-primary btn-sm" id="btn-pop-up-add-aura">Fazer uma requisição</button>
+                  
                 </td>
               </tr>
             </table>
             <div class="pop-up-add-aura">
-              <h3>Adicionar Aura</h3>
+              <h3>Faça uma solicitação de Aura</h3>
               <form>
                 <label for="quantidade">Quantidade de Aura:</label>
                 <input type="number" id="quantidade" name="quantidade" min="1" required>
+                <br>
+                
+                <label for="description">Motivo:</label>
+                <textarea id="description" name="description" class="auto-resize" rows="2" placeholder="Digite o motivo..." required></textarea>
+                <h5>Usuario: Joaozinho</h5>
                 <button type="submit" class="btn btn-success">Confirmar</button>
-                <button type="button" class="btn btn-secondary">Cancelar</button>
+                <button type="button" class="btn btn-secondary" id="botao-cancel">Cancelar</button>
               </form>
             </div>
       </div>
@@ -225,7 +233,7 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
-
+  
 </body>
 
 </html>

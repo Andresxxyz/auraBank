@@ -220,3 +220,11 @@
     divtable.style.display = "none";
     
   });
+
+  //script para fechar o popup (cancel)
+  let popupcancel = document.querySelector("#botao-cancel");
+  popupcancel.addEventListener("click", function (event) {
+    divpopup.classList.remove("active");
+    divpopup.style.display = "none";
+    divtable.style.display = "table";
+  });
