@@ -36,3 +36,25 @@ cadastro
 login
 tela comunidade
 meu perfil
+
+
+// banco
+
+tabela usuario
+ - id AI
+ - username
+ - email
+ - senha
+ - aura
+ - fotoPerfil
+
+tabela comunidade
+  - idcomunidade AI 
+  - nomeComunidade
+  - fotoComunidade
+
+tabela comunidadeUsuario
+  - idComunidadeUsuario AI
+  - idcomunidade
+  - idUsuario
+
