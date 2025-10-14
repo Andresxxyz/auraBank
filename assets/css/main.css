@@ -1831,6 +1831,41 @@ section,
 }
 
 /*--------------------------------------------------------------
+# Cadastro e Login Section
+--------------------------------------------------------------*/
+.section.cadastro{
+  background-color: #00000004;
+}
+
+.form-cadastro-container{
+  background-color: #fff;
+  width: 50%;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  padding: 3rem 4rem;
+  border-radius: 3px;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.form-cadastro-container input:focus{
+  box-shadow: none;
+  border: 1px solid var(--accent-color);
+}
+
+
+.form-cadastro-container .btn-primary{
+  width: 100%;
+  font-weight: bold;
+  background-color: var(--accent-color);
+  border: none;
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+.form-cadastro-container .btn-primary:hover{
+  opacity: 1;
+}
+/*--------------------------------------------------------------
 # Starter Section Section
 --------------------------------------------------------------*/
 .starter-section {
