@@ -28,3 +28,11 @@ meu perfil
 
 adm de comunidade 
  - editar, excluir, por foto
+
+
+// telas 
+
+cadastro
+login
+tela comunidade
+meu perfil
