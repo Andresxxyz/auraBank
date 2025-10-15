@@ -67,3 +67,4 @@ tabela comunidadeUsuario
 
 o que falta
 rtankning mais membro
+tela da comunidade

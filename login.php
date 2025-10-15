@@ -64,11 +64,11 @@
           <form method="post" action="assets/php/login.php" id="cadastro-form">
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">Endereço de Email</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1">
+              <input type="email" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1" required>
             </div>
             <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">Senha</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" name = "exampleInputPassword1">
+              <input type="password" class="form-control" id="exampleInputPassword1" name = "exampleInputPassword1" required>
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
             <p class="text-center mt-1">Ainda não possui cadastro? <a href="cadastro.php">Cadastre-se</a>.</p>
