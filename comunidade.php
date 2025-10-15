@@ -33,13 +33,31 @@ if ($stmtCom = $conn->prepare($sqlCom)) {
     $stmtCom->close();
 }
 
-
+function carregarMembros($conn, $idComunidade) {
+    $sql = 'SELECT u.id, u.username, u.fotoPerfil, u.aura 
+            FROM usuarios u
+            JOIN comunidadeusuario cu ON u.id = cu.idUsuario
+            WHERE cu.idComunidade = ?
+            ORDER BY u.aura DESC, u.username ASC';
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param('i', $idComunidade);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $members = [];
+        while ($row = $result->fetch_assoc()) {
+            $members[] = $row;
+        }
+        $stmt->close();
+        return $members;
+    }
+    return [];
+}
 
 
 
 
 // Load members
-$members = [];
+$members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
 
 
