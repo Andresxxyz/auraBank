@@ -1,7 +1,0 @@
-# Logs
-*.log
-debug.log
-/assets/php/*.log
-
-# Arquivos de ambiente
-.env
