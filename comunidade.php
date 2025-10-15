@@ -4,9 +4,8 @@ require __DIR__ . '/assets/php/conexao.php';
 
 // Ensure user is logged in (for showing members/request feature)
 if (!isset($_SESSION['user_id'])) {
-  // Still allow viewing if not logged? If you prefer, uncomment the redirect below
-  // header('Location: login.php');
-  // exit;
+  header('Location: login.php');
+  exit;
 }
 
 // Resolve community id from GET or fallback to user's first community
