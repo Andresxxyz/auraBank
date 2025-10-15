@@ -61,7 +61,7 @@
             <h2>para farmar aura</h2>
             <p>Cadastre-se<br></p>
           </div>
-          <form method="post" action="/assets/php/cadastro.php" id="cadastro-form">
+          <form method="post" action="/assets/php/processo_cadastro.php" id="cadastro-form">
             <div class="mb-3">
               <label for="usernameInput" class="form-label">Nome de usuário</label>
               <input type="text" class="form-control" id="usernameInput" name="usernameInput" required>
