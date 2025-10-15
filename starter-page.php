@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Cadastre-se</title>
+  <title>Starter Page - Dewi Bootstrap Template</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -15,9 +15,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -46,43 +44,31 @@
   <main class="main">
 
     <!-- Page Title -->
-    <div class="page-title dark-background" data-aos="fade">
+    <div class="page-title dark-background" data-aos="fade" style="background-image: url(assets/img/page-title-bg.webp);">
       <div class="container position-relative">
-        <h1>Cadastro</h1>
+        <h1>Starter Page</h1>
+        <p>Esse dolorum voluptatum ullam est sint nemo et est ipsa porro placeat quibusdam quia assumenda numquam molestias.</p>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Starter Page</li>
+          </ol>
+        </nav>
       </div>
     </div><!-- End Page Title -->
 
-    <!-- Cadastro Section -->
-    <section id="cadastro" class="cadastro section">
+    <!-- Starter Section Section -->
+    <section id="starter-section" class="starter-section section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Starter Section</h2>
+        <p>Starter Section Title<br></p>
+      </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up">
-        <div class="form-cadastro-container">
-          <div class="container section-title px-0 pb-3" data-aos="fade-up">
-            <h2>para farmar aura</h2>
-            <p>Cadastre-se<br></p>
-          </div>
-          <form method="post" action="assets/php/cadastro.php" id="cadastro-form">
-            <div class="mb-3">
-              <label for="usernameInput" class="form-label">Nome de usuário</label>
-              <input type="text" class="form-control" id="usernameInput" name="usernameInput" required>
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">Endereço de Email</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1" required>
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label">Senha</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" name="exampleInputPassword1" required>
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputConfirmPassword1" class="form-label">Confirmar Senha</label>
-              <input type="password" class="form-control" id="exampleInputConfirmPassword1" name="exampleInputConfirmPassword1" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
-          </form>
-        </div>
+        <p>Use this page as a starter for your own custom pages.</p>
       </div>
-      <!-- formulario de cadastro -->
 
     </section><!-- /Starter Section Section -->
 
@@ -92,8 +78,7 @@
 
 
   <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-      class="bi bi-arrow-up-short"></i></a>
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Preloader -->
   <div id="preloader"></div>

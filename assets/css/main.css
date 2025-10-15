@@ -952,7 +952,7 @@ section,
   font-size: 24px;
 }
 
-.hero .btn-get-started {
+.hero .btn-get-started, .btn-salvar {
   background: var(--accent-color);
   color: var(--contrast-color);
   font-weight: 400;
@@ -964,14 +964,15 @@ section,
   transition: 0.3s;
   text-transform: uppercase;
   font-weight: BOLD;
+  border: none;
 }
 
-.hero .btn-get-started:hover {
+.hero .btn-get-started:hover, .btn-salvar:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
 
 
-.hero .btn-login{
+.hero .btn-login, .btn-cancelar{
   border: 1px solid var(--accent-color);
   color: var(--accent-color);
   font-weight: bold;
@@ -982,9 +983,10 @@ section,
   border-radius: 4px;
   transition: 0.3s;
   text-transform: uppercase;
+  background-color: #00000004;
 }
 
-.hero .btn-login:hover{
+.hero .btn-login:hover, .btn-cancelar:hover{
   background: color-mix(in srgb, var(--accent-color), transparent 20%);
   color: #fff;
 }

@@ -18,6 +18,9 @@ aceitar ou rejeitar acao de dar e tirar aura
 
 vizualizar rank de aura
 
+
+GERAR QRCODE DE TRANSFERENCIA DE AURA
+
 // adicionais
 
 meu perfil
@@ -52,6 +55,7 @@ tabela comunidade
   - idcomunidade AI 
   - nomeComunidade
   - fotoComunidade
+  - qtdAuraInternaBruta
 
 tabela comunidadeUsuario
   - idComunidadeUsuario AI
