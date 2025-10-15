@@ -11,7 +11,7 @@ if ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_NAME'] === '127.
             if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
                 list($key, $value) = explode('=', $line, 2);
                 $_ENV[trim($key)] = trim($value);
-                putenv(trim($key)."=".trim($value));
+                putenv(trim($key) . "=" . trim($value));
             }
         }
     }
@@ -20,7 +20,7 @@ if ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_NAME'] === '127.
 $host = getenv('DB_HOST') ?: $_ENV['DB_HOST'];
 $user = getenv('DB_USER') ?: $_ENV['DB_USER'];
 $pass = getenv('DB_PASS') ?: $_ENV['DB_PASS'];
-$db   = getenv('DB_NAME') ?: $_ENV['DB_NAME'];
+$db = getenv('DB_NAME') ?: $_ENV['DB_NAME'];
 $port = getenv('DB_PORT') ?: 3306;
 
 $conn = mysqli_init();
@@ -34,4 +34,5 @@ if (!mysqli_real_connect($conn, $host, $user, $pass, $db, $port)) {
     http_response_code(500);
     die('Erro ao conectar ao banco: ' . $error);
 }
+
 ?>

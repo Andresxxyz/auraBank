@@ -1,4 +1,11 @@
-<?php session_start(); ?>
+<?php session_start();
+require('assets/php/conexao.php');
+$sql = "SELECT nomeComunidade, fotoComunidade, qtdMembros, qtdAura, data_criacao FROM comunidade
+    ORDER BY data_criacao DESC";
+$resultado = $conn->query($sql);
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -133,7 +140,7 @@
         /* Grid de Cards das Comunidades */
         .community-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             /* Colunas responsivas */
             gap: 30px;
             padding-top: 30px;
@@ -185,37 +192,37 @@
         }
 
         .aura-stats {
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 12px;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      margin-bottom: 1rem;
-    }
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 1rem;
+        }
 
-    .aura-stats .aura-label {
-      font-size: 0.9rem;
-      color: #adb5bd;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+        .aura-stats .aura-label {
+            font-size: 0.9rem;
+            color: #adb5bd;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-    .aura-stats .aura-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--accent-color);
-      /* Destaque em dourado para a aura */
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-shadow: 0 4px 15px var(--accent-color);
-    }
+        .aura-stats .aura-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            /* Destaque em dourado para a aura */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 4px 15px var(--accent-color);
+        }
 
-    .aura-stats .aura-value .bi-star-fill {
-      margin-bottom: 5px;
-    }
+        .aura-stats .aura-value .bi-star-fill {
+            margin-bottom: 5px;
+        }
 
         .community-card h3 {
             font-size: 1.5rem;
@@ -283,173 +290,32 @@
                 </div>
 
                 <div class="community-grid">
-
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
+                    <?php if ($resultado && $resultado->num_rows > 0): ?>
+                        <?php while ($comunidade = $resultado->fetch_assoc()): ?>
+                            <div class="community-card">
+                                <div class="community-card-header">
+                                    <img src="<?php echo htmlspecialchars($comunidade['fotoComunidade']) ?>" alt="Banner da Comunidade">
+                                </div>
+                                <div class="community-card-body">
+                                    <div class="aura-stats">
+                                        <span class="aura-label">Aura Acumulada</span>
+                                        <div class="aura-value">
+                                            <i class="bi bi-star-fill"></i>
+                                            <span><?php echo htmlspecialchars($comunidade['qtdAura']) ?></span>
+                                        </div>
+                                    </div>
+                                    <h3><?php echo htmlspecialchars($comunidade['nomeComunidade']) ?></h3>
+                                    <span class="members-count">
+                                        <i class="bi bi-people-fill"></i> <?php echo htmlspecialchars($comunidade['qtdMembros']) ?>
+                                    </span>
                                 </div>
                             </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
-                                </div>
-                            </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
-                                </div>
-                            </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
-                                </div>
-                            </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
-                                </div>
-                            </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
-                                </div>
-                            </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
-                                </div>
-                            </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
-                                </div>
-                            </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
-                    <div class="community-card">
-                        <div class="community-card-header">
-                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                        </div>
-                        <div class="community-card-body">
-                            <div class="aura-stats">
-                                <span class="aura-label">Aura Acumulada</span>
-                                <div class="aura-value">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>892489</span>
-                                </div>
-                            </div>
-                            <h3>Aventureiros da Aura</h3>
-                            <span class="members-count">
-                                <i class="bi bi-people-fill"></i> 1,234 Membros
-                            </span>
-                        </div>
-                    </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <?php echo '<p class="text-center">Nenhum orientador cadastrado ainda.</p>'; ?>
+                    <?php endif; ?>
+                    <?php $conn->close(); ?>
                 </div>
-
             </div>
         </section>
 

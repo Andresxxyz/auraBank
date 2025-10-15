@@ -25,14 +25,14 @@ if (isset($_FILES['fotoComunidade']) && $_FILES['fotoComunidade']['error'] === U
     $caminhoFotoNoServidor = $diretorioUpload . $nomeUnico;
 
     if (move_uploaded_file($arquivo['tmp_name'], $caminhoFotoNoServidor)) {
-        $caminhoFotoFinal = 'img/fotoComunidade/' . $nomeUnico;
+        $caminhoFotoFinal = 'assets/img/fotoComunidade/' . $nomeUnico;
     } else {
         echo "Houve um erro ao fazer o upload da imagem.";
     }
 }
 
 
-$sql = "INSERT INTO comunidade (nomeComunidade, fotoComunidade, qtdMembros, dtCriacao, idCriador) VALUES (?, ?, 1, NOW(), ?)";
+$sql = "INSERT INTO comunidade (nomeComunidade, fotoComunidade, qtdMembros, data_criacao, idCriador, qtdAura) VALUES (?, ?, 1, NOW(), ?, 0)";
 $stmt = $conn->prepare($sql);
 
 $stmt->bind_param("ssi", $nomeComunidade, $caminhoFotoFinal, $idCriador);
