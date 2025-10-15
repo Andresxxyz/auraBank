@@ -1,0 +1,21 @@
+# Enable following symlinks
+Options +FollowSymLinks
+
+# Enable rewrite engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Handle PHP files
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_FILENAME} \.php$
+    RewriteRule ^(.*)$ $1 [L]
+</IfModule>
+
+# Set default files
+DirectoryIndex index.php index.html
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
