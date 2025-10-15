@@ -17,3 +17,16 @@ DB_HOST: definido
 DB_USER: definido
 DB_NAME: definido
 2025-10-15 21:39:36 - Cadastro realizado com sucesso
+2025-10-15 22:00:04 - Início da execução
+2025-10-15 22:00:04 - Tentando incluir conexao.php
+2025-10-15 22:00:04 - Conexão incluída com sucesso
+2025-10-15 22:00:04 - Dados recebidos:
+usernameInput: Andresxxyz
+exampleInputEmail1: rigael@gmaio.com
+exampleInputPassword1: 1234
+exampleInputConfirmPassword1: 1234
+2025-10-15 22:00:04 - Variáveis de ambiente:
+DB_HOST: definido
+DB_USER: definido
+DB_NAME: definido
+2025-10-15 22:00:04 - Cadastro realizado com sucesso
