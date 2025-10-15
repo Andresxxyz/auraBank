@@ -884,14 +884,6 @@ section,
   position: relative;
 }
 
-.section-title h2::after {
-  content: "";
-  width: 120px;
-  height: 1px;
-  display: inline-block;
-  background: var(--accent-color);
-  margin: 4px 10px;
-}
 
 .section-title p {
   color: var(--heading-color);
@@ -1898,6 +1890,14 @@ section,
   border-radius: 3px;
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
+@media (max-width: 1000px) {
+  .form-cadastro-container {
+    width: 95%;
+    padding: 3rem 2rem;
+  }
+}
+
 
 .form-cadastro-container input:focus{
   box-shadow: none;
