@@ -79,6 +79,7 @@
               <input type="password" class="form-control" id="exampleInputConfirmPassword1" name="exampleInputConfirmPassword1" required>
             </div>
             <button type="submit" class="btn btn-primary">Cadastrar</button>
+            <p class="text-center mt-1">Ja possui cadastro? <a href="login.php">Entre</a>.</p>
           </form>
         </div>
       </div>

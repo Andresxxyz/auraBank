@@ -71,6 +71,7 @@
               <input type="password" class="form-control" id="exampleInputPassword1" name = "exampleInputPassword1">
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
+            <p class="text-center mt-1">Ainda não possui cadastro? <a href="cadastro.php">Cadastre-se</a>.</p>
           </form>
         </div>
       </div>
