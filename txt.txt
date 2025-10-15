@@ -65,3 +65,5 @@ tabela comunidadeUsuario
   - idcomunidade
   - idUsuario
 
+o que falta
+rtankning mais membro
