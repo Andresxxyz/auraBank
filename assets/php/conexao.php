@@ -12,7 +12,10 @@ $port = getenv('DB_PORT') ?: 3306;
 
 $conn = mysqli_init();
 
-if (!mysqli_real_connect($conn, $host, $user, $pass, $db, $port)) {
+// Desabilitar SSL explicitamente
+mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+
+if (!mysqli_real_connect($conn, $host, $user, $pass, $db, $port, NULL, MYSQLI_CLIENT_NO_SSL)) {
     $error = mysqli_connect_error();
     file_put_contents(__DIR__ . '/debug.log', date('Y-m-d H:i:s') . " - Erro na conexão: $error\n", FILE_APPEND);
     error_log('Conexão MySQL falhou: ' . $error);
