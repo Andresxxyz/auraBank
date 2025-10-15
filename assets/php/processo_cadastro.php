@@ -37,7 +37,7 @@ try {
     $debug_env .= "DB_NAME: " . (getenv('DB_NAME') ? 'definido' : 'não definido') . "\n";
     file_put_contents(__DIR__ . '/debug.log', date('Y-m-d H:i:s') . " - " . $debug_env, FILE_APPEND);
 
-    $sql = "INSERT INTO usuario (username, email, senha, aura, fotoPerfil) values (?, ?, ?, 0, '../img/fotoPerfil/semFoto.png')";
+    $sql = "INSERT INTO usuario (username, email, senha, aura, fotoPerfil) values (?, ?, ?, 0, 'assets/img/fotoPerfil/semFoto.png')";
     $stmt = $conn->prepare($sql);
     
     if (!$stmt) {
