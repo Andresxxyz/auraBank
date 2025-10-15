@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -140,6 +141,7 @@
         .community-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            cursor: pointer
         }
 
         .community-card-header {
@@ -156,26 +158,6 @@
             filter: brightness(0.7); /* Escurece um pouco a imagem */
         }
         
-        .community-card-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            border: 4px solid var(--background-dark); /* Borda ao redor da imagem */
-            background-color: var(--background-dark);
-            position: absolute;
-            bottom: -45px; /* Metade da altura para centralizar verticalmente */
-            left: 50%;
-            transform: translateX(-50%);
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        }
-
-        .community-card-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .community-card-body {
             padding: 55px 20px 20px 20px; /* Padding maior em cima para compensar o avatar */
             display: flex;
@@ -241,7 +223,7 @@
                         <input type="text" placeholder="Buscar por nome da comunidade..." id="searchCommunityInput">
                         <button type="button" id="searchCommunityBtn"><i class="bi bi-search"></i></button>
                     </div>
-                    <a href="#" class="btn-create-community">
+                    <a href="criarComunidade.php" class="btn-create-community">
                         <i class="bi bi-plus-circle-fill"></i> Criar Comunidade
                     </a>
                 </div>
@@ -251,9 +233,6 @@
                     <div class="community-card">
                         <div class="community-card-header">
                             <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
-                            <div class="community-card-avatar">
-                                <img src="https://i.pravatar.cc/90?img=60" alt="Avatar da Comunidade">
-                            </div>
                         </div>
                         <div class="community-card-body">
                             <h3>Aventureiros da Aura</h3>
@@ -267,9 +246,6 @@
                     <div class="community-card">
                         <div class="community-card-header">
                             <img src="https://picsum.photos/id/1025/400/200" alt="Banner da Comunidade">
-                            <div class="community-card-avatar">
-                                <img src="https://i.pravatar.cc/90?img=5" alt="Avatar da Comunidade">
-                            </div>
                         </div>
                         <div class="community-card-body">
                             <h3>Colecionadores de Artefatos</h3>
@@ -283,9 +259,196 @@
                     <div class="community-card">
                         <div class="community-card-header">
                             <img src="https://picsum.photos/id/10/400/200" alt="Banner da Comunidade">
-                            <div class="community-card-avatar">
-                                <img src="https://i.pravatar.cc/90?img=22" alt="Avatar da Comunidade">
-                            </div>
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Guardiões da Essência</h3>
+                            <p class="description">Protegemos os pontos de concentração de aura e auxiliamos novos membros em suas jornadas.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 2,567 Membros
+                            </span>
+                        </div>
+                    </div>
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Aventureiros da Aura</h3>
+                            <p class="description">Um grupo dedicado a explorar os mistérios da aura e compartilhar conhecimentos sobre novas formas de farmar.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 1,234 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1025/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Colecionadores de Artefatos</h3>
+                            <p class="description">Comunidade focada em descobrir e catalogar artefatos antigos que amplificam o poder da aura.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 789 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/10/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Guardiões da Essência</h3>
+                            <p class="description">Protegemos os pontos de concentração de aura e auxiliamos novos membros em suas jornadas.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 2,567 Membros
+                            </span>
+                        </div>
+                    </div>
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Aventureiros da Aura</h3>
+                            <p class="description">Um grupo dedicado a explorar os mistérios da aura e compartilhar conhecimentos sobre novas formas de farmar.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 1,234 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1025/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Colecionadores de Artefatos</h3>
+                            <p class="description">Comunidade focada em descobrir e catalogar artefatos antigos que amplificam o poder da aura.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 789 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/10/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Guardiões da Essência</h3>
+                            <p class="description">Protegemos os pontos de concentração de aura e auxiliamos novos membros em suas jornadas.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 2,567 Membros
+                            </span>
+                        </div>
+                    </div>
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Aventureiros da Aura</h3>
+                            <p class="description">Um grupo dedicado a explorar os mistérios da aura e compartilhar conhecimentos sobre novas formas de farmar.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 1,234 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1025/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Colecionadores de Artefatos</h3>
+                            <p class="description">Comunidade focada em descobrir e catalogar artefatos antigos que amplificam o poder da aura.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 789 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/10/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Guardiões da Essência</h3>
+                            <p class="description">Protegemos os pontos de concentração de aura e auxiliamos novos membros em suas jornadas.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 2,567 Membros
+                            </span>
+                        </div>
+                    </div>
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Aventureiros da Aura</h3>
+                            <p class="description">Um grupo dedicado a explorar os mistérios da aura e compartilhar conhecimentos sobre novas formas de farmar.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 1,234 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1025/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Colecionadores de Artefatos</h3>
+                            <p class="description">Comunidade focada em descobrir e catalogar artefatos antigos que amplificam o poder da aura.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 789 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/10/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Guardiões da Essência</h3>
+                            <p class="description">Protegemos os pontos de concentração de aura e auxiliamos novos membros em suas jornadas.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 2,567 Membros
+                            </span>
+                        </div>
+                    </div>
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1018/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Aventureiros da Aura</h3>
+                            <p class="description">Um grupo dedicado a explorar os mistérios da aura e compartilhar conhecimentos sobre novas formas de farmar.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 1,234 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/1025/400/200" alt="Banner da Comunidade">
+                        </div>
+                        <div class="community-card-body">
+                            <h3>Colecionadores de Artefatos</h3>
+                            <p class="description">Comunidade focada em descobrir e catalogar artefatos antigos que amplificam o poder da aura.</p>
+                            <span class="members-count">
+                                <i class="bi bi-people-fill"></i> 789 Membros
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="community-card">
+                        <div class="community-card-header">
+                            <img src="https://picsum.photos/id/10/400/200" alt="Banner da Comunidade">
                         </div>
                         <div class="community-card-body">
                             <h3>Guardiões da Essência</h3>

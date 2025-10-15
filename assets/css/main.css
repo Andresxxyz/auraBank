@@ -250,14 +250,14 @@ h6 {
 
 .header .cta-btn,
 .header .cta-btn:focus {
-  color: var(--contrast-color);
+  color: var(--accent-color);
   font-size: 13px;
   padding: 7px 25px;
   margin: 0 0 0 30px;
   border-radius: 4px;
   transition: 0.3s;
   text-transform: uppercase;
-  border: 2px solid var(--contrast-color);
+  border: 2px solid var(--accent-color);
 }
 
 .header .cta-btn:hover,
@@ -266,6 +266,7 @@ h6 {
   background: var(--accent-color);
   border-color: var(--accent-color);
 }
+
 
 @media (max-width: 1200px) {
   .header .logo {
