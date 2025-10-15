@@ -6,10 +6,13 @@ require __DIR__ . '/assets/php/conexao.php';
 if (!isset($_SESSION['user_id'])) {
   header('Location: login.php');
   exit;
+} else {
+  
+  
 }
 
 // Resolve community id from GET or fallback to user's first community
-$idComunidade = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$idComunidade = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
 if (!$idComunidade && isset($_SESSION['user_id'])) {
   $sqlFirst = 'SELECT idComunidade FROM comunidadeUsuario WHERE idUsuario = ? LIMIT 1';
@@ -18,7 +21,7 @@ if (!$idComunidade && isset($_SESSION['user_id'])) {
     $stmtFirst->execute();
     $stmtFirst->bind_result($cid);
     if ($stmtFirst->fetch()) {
-      $idComunidade = (int)$cid;
+      $idComunidade = (int) $cid;
     }
     $stmtFirst->close();
   }
@@ -121,9 +124,11 @@ $reqStatus = isset($_GET['req']) ? $_GET['req'] : null; // feedback from request
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <h4>Dados da Comunidade</h4>
             <?php if ($fotoComUrl): ?>
-              <img src="<?php echo htmlspecialchars($fotoComUrl); ?>" class="img-fluid rounded mb-3" alt="Banner da Comunidade">
+              <img src="<?php echo htmlspecialchars($fotoComUrl); ?>" class="img-fluid rounded mb-3"
+                alt="Banner da Comunidade">
             <?php else: ?>
-              <div class="bg-secondary rounded mb-3" style="height: 180px; display:flex; align-items:center; justify-content:center; color:#fff;">
+              <div class="bg-secondary rounded mb-3"
+                style="height: 180px; display:flex; align-items:center; justify-content:center; color:#fff;">
                 Sem imagem cadastrada
               </div>
             <?php endif; ?>
@@ -139,11 +144,12 @@ $reqStatus = isset($_GET['req']) ? $_GET['req'] : null; // feedback from request
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Membros
-                <span class="badge bg-primary rounded-pill"><?php echo (int)$comunidade['qtdMembros']; ?></span>
+                <span class="badge bg-primary rounded-pill"><?php echo (int) $comunidade['qtdMembros']; ?></span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Criada em
-                <span class="fw-semibold"><?php echo htmlspecialchars(date('d/m/Y', strtotime($comunidade['dtCriacao']))); ?></span>
+                <span
+                  class="fw-semibold"><?php echo htmlspecialchars(date('d/m/Y', strtotime($comunidade['dtCriacao']))); ?></span>
               </li>
             </ul>
 
@@ -172,25 +178,28 @@ $reqStatus = isset($_GET['req']) ? $_GET['req'] : null; // feedback from request
                   <?php else: ?>
                     <?php foreach ($members as $m): ?>
                       <?php
-                        $fotoPerfil = !empty($m['fotoPerfil']) ? $m['fotoPerfil'] : 'assets/img/fotoPerfil/semFoto.png';
-                        // If value doesn't start with assets, prefix
-                        if (strpos($fotoPerfil, 'assets/') !== 0) {
-                          $fotoPerfil = 'assets/' . ltrim($fotoPerfil, '/');
-                        }
+                      $fotoPerfil = !empty($m['fotoPerfil']) ? $m['fotoPerfil'] : 'assets/img/fotoPerfil/semFoto.png';
+                      // If value doesn't start with assets, prefix
+                      if (strpos($fotoPerfil, 'assets/') !== 0) {
+                        $fotoPerfil = 'assets/' . ltrim($fotoPerfil, '/');
+                      }
                       ?>
                       <tr>
                         <td>
                           <div class="d-flex align-items-center gap-2">
-                            <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto" class="rounded-circle" style="width:36px; height:36px; object-fit:cover;">
+                            <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto" class="rounded-circle"
+                              style="width:36px; height:36px; object-fit:cover;">
                             <span class="fw-semibold"><?php echo htmlspecialchars($m['username']); ?></span>
                           </div>
                         </td>
                         <td>
-                          <span class="badge bg-info text-dark"><?php echo (int)$m['aura']; ?></span>
+                          <span class="badge bg-info text-dark"><?php echo (int) $m['aura']; ?></span>
                         </td>
                         <td>
                           <?php if (isset($_SESSION['user_id'])): ?>
-                            <button type="button" class="btn btn-sm btn-primary btn-req-aura" data-bs-toggle="modal" data-bs-target="#reqModal" data-user-id="<?php echo (int)$m['id']; ?>" data-user-name="<?php echo htmlspecialchars($m['username']); ?>">
+                            <button type="button" class="btn btn-sm btn-primary btn-req-aura" data-bs-toggle="modal"
+                              data-bs-target="#reqModal" data-user-id="<?php echo (int) $m['id']; ?>"
+                              data-user-name="<?php echo htmlspecialchars($m['username']); ?>">
                               Fazer uma requisição
                             </button>
                           <?php else: ?>
@@ -212,7 +221,8 @@ $reqStatus = isset($_GET['req']) ? $_GET['req'] : null; // feedback from request
 
   <?php require __DIR__ . '/assets/php/rodape.php'; ?>
 
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
   <div id="preloader"></div>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -235,7 +245,7 @@ $reqStatus = isset($_GET['req']) ? $_GET['req'] : null; // feedback from request
         </div>
         <form method="post" action="assets/php/requisicaoAura.php">
           <div class="modal-body">
-            <input type="hidden" name="idComunidade" value="<?php echo (int)$idComunidade; ?>">
+            <input type="hidden" name="idComunidade" value="<?php echo (int) $idComunidade; ?>">
             <input type="hidden" id="idDestinatario" name="idDestinatario" value="">
             <div class="mb-3">
               <label class="form-label">Usuário</label>
@@ -271,4 +281,5 @@ $reqStatus = isset($_GET['req']) ? $_GET['req'] : null; // feedback from request
     });
   </script>
 </body>
+
 </html>

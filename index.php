@@ -1,3 +1,26 @@
+<?php
+session_start();
+require('assets/php/conexao.php');
+$logado = false;
+$comunidade = false;
+
+
+if (isset($_SESSION["user_id"])) {
+  $logado = true;
+  $sql = 'SELECT * FROM comunidadeusuario WHERE idUsuario=?';
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param(
+    'i',
+    $_SESSION['user_id']
+  );
+  $stmt->execute();
+  $resultado = $stmt->get_result();
+  if ($resultado->num_rows > 0) {
+    $comunidade = true;
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +38,9 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -38,7 +63,7 @@
 
 <body class="index-page">
 
-  <?php include 'assets/php/navbar.php'?>
+  <?php include 'assets/php/navbar.php' ?>
 
   <main class="main">
 
@@ -50,11 +75,28 @@
         <br>
         <br>
         <h2 data-aos="fade-up" data-aos-delay="100">FARME SUA AURA</h2>
-        <p data-aos="fade-up" data-aos-delay="200">We are team of talented designers making websites with Bootstrap</p>
+        <p data-aos="fade-up" data-aos-delay="200">Somos o maior banco de aura do mundo!</p>
         <div class="d-flex mt-4" style="gap: 2rem;" data-aos="fade-up" data-aos-delay="300">
+        <?php
+        if ($logado) {
+
+          if ($comunidade) {
+            echo '<a href="comunidade.php" class="btn-get-started" data-aos="fade-up" data-aos-delay="300">Minha Comunidade</a>';
+
+          } else {
+            
+            echo '<a href="searchComunidade.php" class="btn-get-started" data-aos="fade-up" data-aos-delay="300">Procurar ou Criar Comunidade</a>';
+          }
+        } else {
+          echo '
           <a href="cadastro.php" class="btn-get-started">Cadastre-se</a>
-          <a href="login.php" class="btn-login">Entre</a>
+          <a href="login.php" class="btn-login">Entre</a>';
+        }
+        ?>
         </div>
+        
+          
+       
       </div>
 
     </section><!-- /Hero Section -->
@@ -62,11 +104,12 @@
 
   </main>
 
-  <?php require ("assets/php/rodape.php")?>
+  <?php require("assets/php/rodape.php") ?>
 
 
   <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
 
   <!-- Preloader -->
   <div id="preloader"></div>
