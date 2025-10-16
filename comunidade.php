@@ -35,7 +35,7 @@ if ($stmtCom = $conn->prepare($sqlCom)) {
 
 function carregarMembros($conn, $idComunidade) {
     $sql = 'SELECT u.id, u.username, u.fotoPerfil, u.aura 
-            FROM usuarios u
+            FROM usuario u
             JOIN comunidadeusuario cu ON u.id = cu.idUsuario
             WHERE cu.idComunidade = ?
             ORDER BY u.aura DESC, u.username ASC';
