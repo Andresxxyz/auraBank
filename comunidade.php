@@ -247,61 +247,59 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                     <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
                         <h4 class="mb-3">Ranking de Membros</h4>
 
-                        <div class="table-responsive">
-                            <table class="table table-dark table-striped align-middle">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" style="width: 50px;">#</th>
-                                        <th scope="col">Usuário</th>
-                                        <th scope="col" style="width: 120px;">Aura</th>
-                                        <th scope="col" class="text-center" style="width: 180px;">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (count($members) === 0): ?>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-striped align-middle">
+                                    <thead>
                                         <tr>
-                                            <td colspan="4" class="text-center">Nenhum membro encontrado.</td>
+                                            <th scope="col" style="width: 50px;">#</th>
+                                            <th scope="col">Usuário</th>
+                                            <th scope="col" style="width: 120px;">Aura</th>
+                                            <th scope="col" class="text-center" style="width: 180px;">Ações</th>
                                         </tr>
-                                    <?php else: ?>
-                                        <?php foreach ($members as $key => $m): ?>
-                                            <?php
-                                            $fotoPerfil = !empty($m['fotoPerfil']) ? $m['fotoPerfil'] : 'assets/img/fotoPerfil/semFoto.png';
-
-                                            ?>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (empty($members)): ?>
                                             <tr>
-                                                <th scope="row" class="fs-5 fw-bold"><?php echo $key + 1; ?></th>
-                                                <td>
-                                                    <div class="d-flex align-items-center gap-3">
-                                                        <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto"
-                                                            class="rounded-circle"
-                                                            style="width:40px; height:40px; object-fit:cover;">
-                                                        <span
-                                                            class="fw-semibold"><?php echo htmlspecialchars($m['username']); ?></span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span class="d-flex align-items-center">
-                                                        <i class="bi bi-star-fill text-warning me-2"></i>
-                                                        <span class="fw-bold fs-5"><?php echo (int) $m['aura']; ?></span>
-                                                    </span>
-                                                </td>
-                                                <td class="text-center">
-                                                    <?php if ((int) $m['id'] !== (int) $_SESSION['user_id']): ?>
-                                                        <button type="button" class="btn btn-primary btn-sm btn-req-aura"
-                                                            data-bs-toggle="modal" data-bs-target="#reqModal"
-                                                            data-user-id="<?php echo (int) $m['id']; ?>"
-                                                            data-user-name="<?php echo htmlspecialchars($m['username']); ?>">
-                                                            Dar/Tirar Aura
-                                                        </button>
-                                                    <?php endif; ?>
-                                                    
-                                                </td>
+                                                <td colspan="4" class="text-center">Nenhum membro encontrado.</td>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                        <?php else: ?>
+                                            <?php foreach ($members as $key => $m): ?>
+                                                <?php
+                                                $fotoPerfil = !empty($m['fotoPerfil']) ? $m['fotoPerfil'] : 'assets/img/fotoPerfil/semFoto.png';
+                                                ?>
+                                                <tr>
+                                                    <th scope="row" class="fs-5 fw-bold" style="color: var(--accent-color); text-shadow: 0 4px 15px var(--accent-color);"><?php echo $key + 1; ?></th>
+                                                    <td>
+                                                        <div class="d-flex align-items-center gap-3">
+                                                            <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto"
+                                                                class="rounded-circle"
+                                                                style="width:40px; height:40px; object-fit:cover;">
+                                                            <span
+                                                                class="fw-semibold" style="color: var(--accent-color ); text-shadow: 0 4px 15px var(--accent-color);"><?php echo htmlspecialchars($m['username']); ?></span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="d-flex align-items-center">
+                                                            <i class="bi bi-star-fill text-warning me-2"></i>
+                                                            <span class="fw-bold fs-5" style="color: var(--accent-color); text-shadow: 0 4px 15px var(--accent-color);"><?php echo (int) $m['aura']; ?></span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?php if ((int) $m['id'] !== (int) $_SESSION['user_id']): ?>
+                                                            <button type="button" class="btn btn-primary btn-sm btn-req-aura"
+                                                                data-bs-toggle="modal" data-bs-target="#reqModal"
+                                                                data-user-id="<?php echo (int) $m['id']; ?>"
+                                                                data-user-name="<?php echo htmlspecialchars($m['username']); ?>">
+                                                                Dar/Tirar Aura
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
 
                             <hr class="my-4 opacity-25">
                             <h4 class="mb-3">Requisições Recentes</h4>
