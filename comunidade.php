@@ -254,7 +254,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                                 class="rounded-circle"
                                                                 style="width:40px; height:40px; object-fit:cover;">
                                                             <span
-                                                                class="fw-semibold" style="color: var(--accent-color); text-shadow: 0 4px 15px var(--accent-color);"><?php echo htmlspecialchars($m['username']); ?></span>
+                                                                class="fw-semibold" style="color: var(--accent-color ); text-shadow: 0 4px 15px var(--accent-color);"><?php echo htmlspecialchars($m['username']); ?></span>
                                                         </div>
                                                     </td>
                                                     <td>
