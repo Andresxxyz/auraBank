@@ -6,8 +6,8 @@ require __DIR__ . '/assets/php/conexao.php';
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
-} else {
 }
+
 // carregar a comunidade
 $sqlInfo = 'SELECT idComunidade FROM comunidadeusuario WHERE idUsuario=?';
 $stmt = $conn->prepare($sqlInfo);
@@ -21,33 +21,37 @@ $resultadoInfo = $stmt->get_result();
 $comunidade = null;
 $sqlCom = 'SELECT * FROM comunidade WHERE idComunidade = ? ';
 if ($stmtCom = $conn->prepare($sqlCom)) {
-
-    $stmtCom->bind_param('i', $resultadoInfo->fetch_assoc()['idComunidade']);
-
-    $stmtCom->execute();
-
-    $result = $stmtCom->get_result();
-    if ($result && $result->num_rows === 1) {
-        $comunidade = $result->fetch_assoc();
+    $idComunidade = $resultadoInfo->fetch_assoc()['idComunidade'] ?? 0;
+    if ($idComunidade > 0) {
+        $stmtCom->bind_param('i', $idComunidade);
+        $stmtCom->execute();
+        $result = $stmtCom->get_result();
+        if ($result && $result->num_rows === 1) {
+            $comunidade = $result->fetch_assoc();
+        }
+        $stmtCom->close();
     }
-    $stmtCom->close();
 }
 
 
 
-$sqlCriador = 'SELECT username FROM usuario WHERE id = ?';
-if ($stmtCriador = $conn->prepare($sqlCriador)) {
-    $stmtCriador->bind_param('i', $comunidade['idCriador']);
-    $stmtCriador->execute();
-    $result = $stmtCriador->get_result();
-    if ($result && $result->num_rows === 1) {
-        $comunidade['criador'] = $result->fetch_assoc()['username'];
+if ($comunidade) {
+    $sqlCriador = 'SELECT username FROM usuario WHERE id = ?';
+    if ($stmtCriador = $conn->prepare($sqlCriador)) {
+        $stmtCriador->bind_param('i', $comunidade['idCriador']);
+        $stmtCriador->execute();
+        $result = $stmtCriador->get_result();
+        if ($result && $result->num_rows === 1) {
+            $comunidade['criador'] = $result->fetch_assoc()['username'];
+        }
+        $stmtCriador->close();
     }
-    $stmtCriador->close();
 }
+
 
 function carregarMembros($conn, $idComunidade)
 {
+    if (!$idComunidade) return [];
     $sql = 'SELECT u.id, u.username, u.fotoPerfil, u.aura 
             FROM usuario u
             JOIN comunidadeusuario cu ON u.id = cu.idUsuario
@@ -83,6 +87,7 @@ if($comunidade['qtdMembros'] <= 10){
 
 function carregarRequisicoes($conn, $idComunidade)
 {
+    if (!$idComunidade) return [];
     $sql = 'SELECT r.*, 
                    sr.username AS remetenteNome, 
                    sd.username AS destinatarioNome
@@ -107,14 +112,7 @@ function carregarRequisicoes($conn, $idComunidade)
 }
 
 $requisicoes = carregarRequisicoes($conn, $comunidade['idComunidade'] ?? 0);
-
-// Load members
 $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
-
-
-
-
-
 
 ?>
 <!DOCTYPE html>
@@ -138,32 +136,46 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
     <link href="assets/css/main.css" rel="stylesheet">
 
     <style>
-        /* Card de Informações da Comunidade */
-        .community-info-card {
+        /* MODIFICADO: Estilo do card principal que envolve todo o conteúdo */
+        .main-content-card {
             background-color: #2c2f33;
             color: #f0f0f0;
             border-radius: 20px;
-            padding: 25px;
+            padding: 30px;
             border: 1px solid #4f545c;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .main-content-card h4{
+            color: #fff;
+        }
+
+
+        /* MODIFICADO: Removemos o estilo dos cards internos para que fiquem transparentes */
+        .community-info-card,
+        .requests-card {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            box-shadow: none;
             margin-bottom: 10px;
         }
 
         /* Ajustes na tabela para o tema escuro */
         .table-dark {
-            --bs-table-bg: #2c2f33;
+            --bs-table-bg: transparent; /* Fundo transparente para se mesclar */
             --bs-table-border-color: #4f545c;
            
         }
-
-        /* Novo: card de requisições (mesma estética) */
-        .requests-card {
-            background-color: #2c2f33;
-            color: #f0f0f0;
-            border-radius: 20px;
-            border: 1px solid #4f545c;
-            overflow: hidden;
+        
+        /* Ajustes na lista de informações da comunidade */
+        .community-info-card .list-group-item {
+             background: transparent;
+             color: #f0f0f0;
+             border-color: #4f545c !important; /* Força a cor da borda */
         }
 
+        /* Card de requisições */
         .requests-card .list-group-item {
             background: transparent;
             color: #f0f0f0;
@@ -196,52 +208,47 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
         <section id="service-details" class="service-details section">
             <div class="container">
-                <div class="row gy-4">
+                <div class="main-content-card" data-aos="fade-up">
+                    <div class="row gy-5"> <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                            <h4>Dados da Comunidade</h4>
+                            <div class="community-info-card h-100">
+                                <?php if (!empty($comunidade['fotoComunidade'])): ?>
+                                    <img src="<?php echo htmlspecialchars($comunidade['fotoComunidade']); ?>"
+                                        class="img-fluid rounded mb-3" alt="Banner da Comunidade">
+                                <?php else: ?>
+                                    <div class="bg-secondary rounded mb-3 d-flex align-items-center justify-content-center"
+                                        style="height: 180px; color:#fff; background-color: #4f545c !important;">
+                                        Sem imagem
+                                    </div>
+                                <?php endif; ?>
 
-                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                        <h4>Dados da Comunidade</h4>
-                        <div class="community-info-card h-100">
-                            <?php if ($comunidade['fotoComunidade']): ?>
-                                <img src="<?php echo htmlspecialchars($comunidade['fotoComunidade']); ?>"
-                                    class="img-fluid rounded mb-3" alt="Banner da Comunidade">
-                            <?php else: ?>
-                                <div class="bg-secondary rounded mb-3 d-flex align-items-center justify-content-center"
-                                    style="height: 180px; color:#fff;">
-                                    Sem imagem
-                                </div>
-                            <?php endif; ?>
-
-                            <ul class="list-group list-group-flush bg-transparent mb-3">
-                                <li
-                                    class="list-group-item d-flex justify-content-between align-items-center bg-transparent text-white border-secondary">
-                                    Nome <span
-                                        class="fw-semibold text-end"><?php echo htmlspecialchars($comunidade['nomeComunidade']); ?></span>
-                                </li>
-                                <li
-                                    class="list-group-item d-flex justify-content-between align-items-center bg-transparent text-white border-secondary">
-                                    Criador <span
-                                        class="fw-semibold text-end"><?php echo htmlspecialchars($comunidade['criador'] ?? '—'); ?></span>
-                                </li>
-                                <li
-                                    class="list-group-item d-flex justify-content-between align-items-center bg-transparent text-white border-secondary">
-                                    Membros <span
-                                        class="badge bg-primary rounded-pill"><?php echo (int) $comunidade['qtdMembros']; ?></span>
-                                </li>
-                                <li
-                                    class="list-group-item d-flex justify-content-between align-items-center bg-transparent text-white border-secondary">
-                                    Criada em <span
-                                        class="fw-semibold text-end"><?php echo htmlspecialchars(date('d/m/Y', strtotime($comunidade['data_criacao']))); ?></span>
-                                </li>
-                            </ul>
-                            <a href="searchComunidade.php" class="btn btn-outline-light w-100 mt-auto">Voltar</a>
+                                <ul class="list-group list-group-flush bg-transparent mb-3">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Nome <span
+                                            class="fw-semibold text-end"><?php echo htmlspecialchars($comunidade['nomeComunidade']); ?></span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Criador <span
+                                            class="fw-semibold text-end"><?php echo htmlspecialchars($comunidade['criador'] ?? '—'); ?></span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Membros <span
+                                            class="badge bg-primary rounded-pill"><?php echo (int) ($comunidade['qtdMembros'] ?? 0); ?></span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Criada em <span
+                                            class="fw-semibold text-end"><?php echo htmlspecialchars(date('d/m/Y', strtotime($comunidade['data_criacao']))); ?></span>
+                                    </li>
+                                </ul>
+                                <a href="searchComunidade.php" class="btn btn-outline-light w-100 mt-auto">Voltar</a>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200" >
-                        <h4 class="mb-3" style="margin-top: 29px;">Ranking de Membros</h4>
+                    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+                        <h4 class="mb-3">Ranking de Membros</h4>
 
-                        <div class="table-responsive" style="border-radius: 5%;">
-                            <table class="table table-dark table-striped align-middle" >
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped align-middle">
                                 <thead>
                                     <tr>
                                         <th scope="col" style="width: 50px;">#</th>
@@ -296,82 +303,43 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                             </table>
                         </div>
 
-                        <!-- Novo bloco: Requisições Recentes -->
-                        <hr class="my-4 opacity-25">
-                        <h4 class="mb-3">Requisições Recentes</h4>
-                        <div class="requests-card">
-                            <ul class="list-group list-group-flush">
-
-                                <?php if ($requisicoes === null): ?>
-                                    <!-- Estado vazio (mantenha quando não houver requisições) -->
-                                    <li class="list-group-item text-center py-4">
-                                        <span class="text-secondary">Nenhuma requisição recente.</span>
-                                    </li>
-                                    ENTROU REQUISICAO
-                                <?php else: ?>
-                                    <?php foreach ($requisicoes as $req): ?>
-                                        <!-- Renderize cada requisição aqui com PHP (exemplo de item abaixo):-->
-                                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                            <div class="d-flex align-items-center gap-3">
-                                                <?php 
-                                                // ACHAR FOTO DO DESTINATARIO
-                                                $sqlFotoDestinatario = 'SELECT fotoPerfil FROM usuario WHERE id = ?';
-                                                $stmtFotoDestinatario = $conn->prepare($sqlFotoDestinatario);
-                                                $stmtFotoDestinatario->bind_param('i', $req['idDestinatario']);
-                                                $stmtFotoDestinatario->execute();
-                                                $stmtFotoDestinatario->bind_result($fotoDestinatario);
-                                                $stmtFotoDestinatario->fetch();
-                                                $stmtFotoDestinatario->close();
-                                                ?>
-
-                                                <img src="<?php echo htmlspecialchars($fotoDestinatario ?? 'assets/img/fotoPerfil/semFoto.png'); ?>"
-                                                    alt="Foto" class="rounded-circle"
-                                                    style="width:40px; height:40px; object-fit:cover;">
-                                                <div>
-                                                    <div class="fw-semibold">
-                                                        <?php 
-                                                            // ACHAR NOME DO REMETENTE
-                                                            $sqlNomeRemetente = 'SELECT username FROM usuario WHERE id = ?';
-                                                            $stmtNomeRemetente = $conn->prepare($sqlNomeRemetente);
-                                                            $stmtNomeRemetente->bind_param('i', $req['idRemetente']);
-                                                            $stmtNomeRemetente->execute();
-                                                            $stmtNomeRemetente->bind_result($nomeRemetente);
-                                                            $stmtNomeRemetente->fetch();
-                                                            $stmtNomeRemetente->close();
-                                                        ?>
-                                                        <?php
-                                                            // ACHAR NOME DO DESTINATARIO
-                                                            $sqlNomeDestinatario = 'SELECT username FROM usuario WHERE id = ?';
-                                                            $stmtNomeDestinatario = $conn->prepare($sqlNomeDestinatario);
-                                                            $stmtNomeDestinatario->bind_param('i', $req['idDestinatario']);
-                                                            $stmtNomeDestinatario->execute();
-                                                            $stmtNomeDestinatario->bind_result($nomeDestinatario);
-                                                            $stmtNomeDestinatario->fetch();
-                                                            $stmtNomeDestinatario->close();
-                                                        ?>
-                                                        <?php echo htmlspecialchars($nomeRemetente ?? 'Fulano'); ?> →
-                                                        <?php echo htmlspecialchars($nomeDestinatario ?? 'Sicrana'); ?></div>
-                                                    <div class="request-meta">Qtd: <?php echo (int) ($req['quantidade'] ?? 0); ?>
-                                                        • Motivo:
-                                                        <?php echo htmlspecialchars($req['motivo'] ?? 'Ajuda no projeto'); ?> •
-                                                        <?php echo htmlspecialchars($req['data'] ?? '12/10/2025'); ?></div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span class="badge bg-warning text-dark me-2">Pendente</span>
-                                                <button class="btn btn-success btn-sm">Aprovar</button>
-                                                <button class="btn btn-outline-danger btn-sm">Negar</button>
-                                            </div>
+                            <hr class="my-4 opacity-25">
+                            <h4 class="mb-3">Requisições Recentes</h4>
+                            <div class="requests-card">
+                                <ul class="list-group list-group-flush">
+                                    <?php if (empty($requisicoes)): ?>
+                                        <li class="list-group-item text-center py-4" style="background:transparent; border-color: #4f545c;">
+                                            <span class="text-secondary">Nenhuma requisição recente.</span>
                                         </li>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-
-                            </ul>
+                                    <?php else: ?>
+                                        <?php foreach ($requisicoes as $req): ?>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                                 <div class="d-flex align-items-center gap-3">
+                                                    <div>
+                                                        <div class="fw-semibold">
+                                                           <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?> →
+                                                           <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
+                                                        </div>
+                                                        <div class="request-meta">
+                                                            Qtd: <?php echo (int) ($req['quantidade'] ?? 0); ?> • 
+                                                            Motivo: <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?> • 
+                                                            <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="badge bg-warning text-dark me-2">Pendente</span>
+                                                    <button class="btn btn-success btn-sm">Aprovar</button>
+                                                    <button class="btn btn-outline-danger btn-sm">Negar</button>
+                                                </div>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
                         </div>
-                        <!-- Fim do bloco: Requisições Recentes -->
                     </div>
-                </div>
-            </div>
+                </div> </div>
         </section>
     </main>
 
@@ -389,11 +357,9 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-
-                <!-- requisicao de aura -->
                 <form method="post" action="assets/php/requisicaoAura.php">
                     <div class="modal-body">
-                        <input type="hidden" name="idComunidade" value="<?php echo (int) $comunidade['idComunidade']; ?>">
+                        <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
                         <input type="hidden" id="idDestinatario" name="idDestinatario" value="">
                         <div class="mb-3">
                             <label class="form-label">Usuário</label>
