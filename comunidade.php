@@ -33,6 +33,8 @@ if ($stmtCom = $conn->prepare($sqlCom)) {
     $stmtCom->close();
 }
 
+
+
 $sqlCriador = 'SELECT username FROM usuario WHERE id = ?';
 if ($stmtCriador = $conn->prepare($sqlCriador)) {
     $stmtCriador->bind_param('i', $comunidade['idCriador']);
@@ -63,6 +65,19 @@ function carregarMembros($conn, $idComunidade)
         return $members;
     }
     return [];
+}
+
+$qtdAprovacao = 0;
+if($comunidade['qtdMembros'] <= 10){
+    $qtdAprovacao = 2;
+} elseif($comunidade['qtdMembros'] <= 30){
+    $qtdAprovacao = 5;
+} elseif($comunidade['qtdMembros'] <= 50){
+    $qtdAprovacao = 10;
+} elseif($comunidade['qtdMembros'] <= 100){
+    $qtdAprovacao = 15;
+} else {
+    $qtdAprovacao = 20;
 }
 
 
@@ -130,12 +145,14 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             border-radius: 20px;
             padding: 25px;
             border: 1px solid #4f545c;
+            margin-bottom: 10px;
         }
 
         /* Ajustes na tabela para o tema escuro */
         .table-dark {
             --bs-table-bg: #2c2f33;
             --bs-table-border-color: #4f545c;
+           
         }
 
         /* Novo: card de requisições (mesma estética) */
@@ -156,6 +173,10 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         .requests-card .request-meta {
             color: #b7bcc4;
             font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            
         }
     </style>
 </head>
@@ -216,11 +237,11 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                         </div>
                     </div>
 
-                    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
-                        <h4 class="mb-3">Ranking de Membros</h4>
+                    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200" >
+                        <h4 class="mb-3" style="margin-top: 29px;">Ranking de Membros</h4>
 
-                        <div class="table-responsive">
-                            <table class="table table-dark table-striped align-middle">
+                        <div class="table-responsive" style="border-radius: 5%;">
+                            <table class="table table-dark table-striped align-middle" >
                                 <thead>
                                     <tr>
                                         <th scope="col" style="width: 50px;">#</th>
