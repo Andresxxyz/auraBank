@@ -14,8 +14,14 @@
     <nav id="navmenu" class="navmenu">
       <ul>
         <li><a href="index.php">Home</a></li>
+        <li><a href="#footer">Contato</a></li>
+
         <li><a href="searchComunidade.php">Comunidades</a></li>
         <li><a href="#footer">Contato</a></li>
+        <?php
+        if (isset($_SESSION["user_id"])) {
+          echo ("<li><a href='comunidade.php'>Minha Comunidade</a></li>");
+        } ?>
         <?php
         if (isset($_SESSION["user_id"])) {
           echo ("<li><a href='meu_perfil.php'>Meu Perfil</a></li>");

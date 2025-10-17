@@ -111,6 +111,8 @@ function carregarRequisicoes($conn, $idComunidade)
     return [];
 }
 
+
+
 $requisicoes = carregarRequisicoes($conn, $comunidade['idComunidade'] ?? 0);
 $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
@@ -327,8 +329,14 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                 </div>
                                                 <div class="d-flex align-items-center gap-2">
                                                     <span class="badge bg-warning text-dark me-2">Pendente</span>
-                                                    <button class="btn btn-success btn-sm">Aprovar</button>
-                                                    <button class="btn btn-outline-danger btn-sm">Negar</button>
+                                                    <form action="assets/php/aprovar.php" method="post">
+                                                        <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                        <button class="btn btn-success btn-sm">Aprovar</button>
+                                                    </form>
+                                                    <form action="assets/php/negar.php" method="post">
+                                                        <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                        <button class="btn btn-outline-danger btn-sm">Negar</button>
+                                                    </form>
                                                 </div>
                                             </li>
                                         <?php endforeach; ?>
