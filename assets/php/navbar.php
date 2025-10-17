@@ -1,4 +1,5 @@
-<?php if (session_status() === PHP_SESSION_NONE) {
+<?php 
+if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 ?>
@@ -20,9 +21,19 @@
         <li><a href="#footer">Contato</a></li>
         <?php
         if (isset($_SESSION["user_id"])) {
-          echo ("<li><a href='comunidade.php'>Minha Comunidade</a></li>");
-        } ?>
-        <?php
+            require('assets/php/conexao.php');
+            $sql_navbar = 'SELECT * FROM comunidadeusuario WHERE idUsuario=?';
+            $stmt_navbar = $conn->prepare($sql_navbar);
+            $stmt_navbar->bind_param(
+              'i',
+              $_SESSION['user_id']
+            );
+            $stmt_navbar->execute();
+            $resultado_navbar = $stmt_navbar->get_result();
+            if ($resultado_navbar->num_rows > 0) {
+              echo ("<li><a href='comunidade.php'>Minha Comunidade</a></li>");
+            }
+        } 
         if (isset($_SESSION["user_id"])) {
           echo ("<li><a href='meu_perfil.php'>Meu Perfil</a></li>");
         }
