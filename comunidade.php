@@ -121,6 +121,7 @@ function carregarRequisicoes($conn, $idComunidade)
 
 
 
+
 $requisicoes = carregarRequisicoes($conn, $comunidade['idComunidade'] ?? 0);
 $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
@@ -311,71 +312,73 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                 </table>
                             </div>
 
-                            <hr class="my-4 opacity-25">
-                            <h4 class="mb-3">Requisições Recentes</h4>
-                            <div class="requests-card">
-                                <ul class="list-group list-group-flush">
-                                    <?php if (empty($requisicoes)): ?>
-                                        <li class="list-group-item text-center py-4" style="background:transparent; border-color: #4f545c;">
-                                            <span class="text-secondary">Nenhuma requisição recente.</span>
-                                        </li>
-                                    <?php else: ?>
-                                        <?php foreach ($requisicoes as $req): ?>
-                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                                 <div class="d-flex align-items-center gap-3">
-                                                    <div>
-                                                        <div class="fw-semibold">
-                                                           <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?> →
-                                                           <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
-                                                        </div>
-                                                        <div class="request-meta">
-                                                            Qtd: <?php echo (int) ($req['quantidade'] ?? 0); ?> • 
-                                                            Motivo: <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?> • 
-                                                            <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
-                                                        </div>
+                        </div>
+                        <!-- renderizar as requisicoes -->
+                        <hr class="my-4 opacity-25">
+                        <h4 class="mb-3">Requisições Recentes</h4>
+                        <div class="requests-card">
+                            <ul class="list-group list-group-flush">
+                                <?php if (empty($requisicoes)): ?>
+                                    <li class="list-group-item text-center py-4" style="background:transparent; border-color: #4f545c;">
+                                        <span class="text-secondary">Nenhuma requisição recente.</span>
+                                    </li>
+                                <?php else: ?>
+                                    <?php foreach ($requisicoes as $req): ?>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                             <div class="d-flex align-items-center gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">
+                                                       <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?> →
+                                                       <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
+                                                    </div>
+                                                    <div class="request-meta">
+                                                        Qtd: <?php echo (int) ($req['quantidade'] ?? 0); ?> • 
+                                                        Motivo: <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?> • 
+                                                        <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <?php if ($req['status'] === 'Aprovada'): ?>
-                                                        <span class="badge bg-success me-2">Aprovada</span>
-                                                    <?php elseif ($req['status'] === 'Negada'): ?>
-                                                        <span class="badge bg-danger me-2">Negada</span>
-                                                    <?php else: ?>
-                                                        <span class="badge bg-warning text-dark me-2">Pendente</span>
-                                                    <?php endif; ?>
-                                                    <?php 
-                                                        $sqlRequisicaousuario = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
-                                                        $votou = null;
-                                                        if ($stmt = $conn->prepare($sqlRequisicaousuario)) {
-                                                            $userId = (int)($_SESSION['user_id'] ?? 0);
-                                                            $reqId = isset($req['idRequisicao']) ? (int)$req['idRequisicao'] : (int)($req['id'] ?? 0);
-                                                            $stmt->bind_param("ii", $reqId, $userId);
-                                                            $stmt->execute();
-                                                            $res = $stmt->get_result();
-                                                            if ($res && ($row = $res->fetch_assoc())) {
-                                                                $votou = isset($row['votou']) ? (int)$row['votou'] : null;
-                                                            }
-                                                            $stmt->close();
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <?php if ($req['status'] === 'Aprovada'): ?>
+                                                    <span class="badge bg-success me-2">Aprovada</span>
+                                                <?php elseif ($req['status'] === 'Negada'): ?>
+                                                    <span class="badge bg-danger me-2">Negada</span>
+                                                <?php else: ?>
+                                                    <span class="badge bg-warning text-dark me-2">Pendente</span>
+                                                <?php endif; ?>
+                                                <?php 
+                                                    $sqlRequisicaousuario = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
+                                                    $votou = null;
+                                                    if ($stmt = $conn->prepare($sqlRequisicaousuario)) {
+                                                        $userId = (int)($_SESSION['user_id'] ?? 0);
+                                                        $reqId = isset($req['idRequisicao']) ? (int)$req['idRequisicao'] : (int)($req['id'] ?? 0);
+                                                        $stmt->bind_param("ii", $reqId, $userId);
+                                                        $stmt->execute();
+                                                        $res = $stmt->get_result();
+                                                        if ($res && ($row = $res->fetch_assoc())) {
+                                                            $votou = isset($row['votou']) ? (int)$row['votou'] : null;
                                                         }
-                                                        if ($votou !== 1) {
-                                                    ?>
-                                                    <form action="assets/php/aprovar.php" method="post">
-                                                        <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
-                                                        
-                                                        <button class="btn btn-success btn-sm">Aprovar</button>
-                                                    </form>
-                                                    <form action="assets/php/negar.php" method="post">
-                                                        <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
-                                                        
-                                                        <button class="btn btn-outline-danger btn-sm">Negar</button>
-                                                    </form>
-                                                    <?php } ?>
-                                                </div>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
+                                                        $stmt->close();
+                                                    }
+                                                    if ($votou !== 1&& $votou !== 0) {
+                                                ?>
+                                                <form action="assets/php/aprovar.php" method="post">
+                                                    <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                    <input type="hidden" name="idDestinatario" value="<?php echo (int) ($req['idDestinatario'] ?? 0); ?>">
+                                                    <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
+                                                    <button class="btn btn-success btn-sm">Aprovar</button>
+                                                </form>
+                                                <form action="assets/php/negar.php" method="post">
+                                                    <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                    <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
+                                                    <button class="btn btn-outline-danger btn-sm">Negar</button>
+                                                </form>
+                                                <?php } ?>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </ul>
                         </div>
                     </div>
                 </div> </div>
