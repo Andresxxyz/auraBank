@@ -1,5 +1,24 @@
 <?php if (session_status() === PHP_SESSION_NONE) {
   session_start();
+
+}
+
+$logado = false;
+$comunidade = false;
+
+if (isset($_SESSION["user_id"])) {
+  $logado = true;
+  $sql = 'SELECT * FROM comunidadeusuario WHERE idUsuario=?';
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param(
+    'i',
+    $_SESSION['user_id']
+  );
+  $stmt->execute();
+  $resultado = $stmt->get_result();
+  if ($resultado->num_rows > 0) {
+    $comunidade = true;
+  }
 }
 ?>
 <header id="header" class="header d-flex align-items-center fixed-top">
@@ -14,22 +33,27 @@
     <nav id="navmenu" class="navmenu">
       <ul>
         <li><a href="index.php">Home</a></li>
-        <li><a href="searchComunidade.php">Comunidades</a></li>
         <li><a href="#footer">Contato</a></li>
+        <li><a href="searchComunidade.php">Comunidades</a></li>
         <?php
-        if (isset($_SESSION["user_id"])) {
-          echo ("<li><a href='meu_perfil.php'>Meu Perfil</a></li>");
+        if ($comunidade) {
+          echo ("<li><a href='comunidade.php'>Minha Comunidade</a></li>");
         }
+        if ($logado) {
+          echo ("<li><a href='meu_perfil.php'>Meu Perfil</a></li>");
+
+        }
+
         ?>
       </ul>
       <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
     </nav>
     <?php
-    if (!isset($_SESSION["user_id"])) {
+    if (!$logado) {
       echo ("<a class='cta-btn' href='login.php'>Entre</a>
           <a href='cadastro.php' class='cta-btn'>Cadastre-se</a>");
-    } else{
-      echo("<a class='cta-btn' href='assets/php/logout.php'>Sair</a>");
+    } else {
+      echo ("<a class='cta-btn' href='assets/php/logout.php'>Sair</a>");
     }
     ?>
 
