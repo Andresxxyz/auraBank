@@ -85,6 +85,21 @@ $fotoPerfil = $usuario["fotoPerfil"];
       /* Espaçamento entre os elementos */
     }
 
+    @media (max-width: 575px) {
+
+            .cadastro{
+                padding: 0;
+            }
+
+            .container{
+                padding: 0;
+            }
+            .profile-card{
+                border-radius: 0;
+                border: none;
+            }
+        }
+
     /* Container da Foto de Perfil */
     .profile-picture-container {
       position: relative;
