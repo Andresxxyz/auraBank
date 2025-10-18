@@ -382,8 +382,23 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                             echo (int) ($votos['votosFavor'] ?? 0);
                                                             ?>
                                                             • <b>Votos necessários:</b> <?php echo ceil($comunidade['qtdMembros'] * 0.5); ?>
+                                                            • Você  <?php
 
-                                                        
+                                                            $sqlVotou = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
+                                                            $stmtVotou = $conn->prepare($sqlVotou);
+                                                            $stmtVotou->bind_param("ii", $req['id'], $_SESSION['user_id']);
+                                                            $stmtVotou->execute();
+                                                            $votou =  $stmtVotou->get_result() ->fetch_assoc()['votou'] ?? null;
+                                                            
+
+                                                            if ($votou == 1) {
+                                                                echo "aprovou";
+                                                            } elseif ($votou == 0) {
+                                                                echo "negou";
+                                                            } else {
+                                                                echo "não votou";
+                                                            }
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
