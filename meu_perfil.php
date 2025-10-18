@@ -319,6 +319,99 @@ $fotoPerfil = $usuario["fotoPerfil"];
       justify-content: center;
     }
 
+    /* popup editar perfil (novo) */
+    .popup-editar-perfil {
+      display: none;
+      position: fixed;
+      z-index: 1002;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #0b0f15;
+      border-radius: 8px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+      width: 38%;
+      max-width: 720px;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .popup-editar-perfil .popup-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .popup-editar-perfil label {
+      font-size: 0.9rem;
+      color: #cfd8dc;
+    }
+
+    .popup-editar-perfil input[type="text"],
+    .popup-editar-perfil input[type="email"],
+    .popup-editar-perfil input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #39424a;
+      background: #0f1418;
+      color: #fff;
+    }
+
+    .popup-editar-perfil .form-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .popup-editar-perfil .form-row .col {
+      flex: 1;
+    }
+
+    .popup-editar-perfil .image-preview-small {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid #333;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup-editar-perfil .image-preview-small img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .popup-editar-perfil .popup-footer {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .popup-editar-perfil .btn-salvar,
+    .popup-editar-perfil .btn-cancelar {
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .popup-editar-perfil .btn-salvar {
+      background: var(--accent-color);
+      color: #fff;
+    }
+
+    .popup-editar-perfil .btn-cancelar {
+      background: #26292d;
+      color: #ddd;
+    }
+
     .overlay {
       position: fixed;
       top: 0;
@@ -390,9 +483,10 @@ $fotoPerfil = $usuario["fotoPerfil"];
               <p class="community-info">Membro de <span class="community-name">Comunidade Alpha</span></p>
             </div>
 
-            <a href="#" class="btn-edit-profile">
+            <!-- alterado: transformar link em botão com id para abrir popup editar perfil -->
+            <button id="edit-profile-btn" class="btn-edit-profile" type="button">
               <i class="bi bi-pencil-square"></i> Editar Perfil
-            </a>
+            </button>
 
             <div class="aura-stats">
               <span class="aura-label">Aura Farmada</span>
@@ -406,6 +500,42 @@ $fotoPerfil = $usuario["fotoPerfil"];
         </div>
       </div>
       <!-- formulario de cadastro -->
+
+      <!-- popup editar perfil (novo) -->
+      <div class="popup-editar-perfil" id="popupEditarPerfil" aria-hidden="true">
+        <button type="button" class="fechar-popup"
+                style="position:absolute;right:8px;top:4px;font-size:28px;background:none;border:none;color:#888"
+                onclick="fecharPopups()">×</button>
+        <form class="popup-content" id="formEditarPerfil" action="assets/php/editarPerfil.php" method="POST" enctype="multipart/form-data">
+          
+          <input type="hidden" name="action" value="update_profile">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div class="image-preview-small">
+              <img id="previewFotoPerfil" src="<?php echo htmlspecialchars($fotoPerfil) ?>" alt="preview">
+            </div>
+            <div style="flex:1;">
+              <label for="usernameInput">Nome de usuário</label>
+              <input id="usernameInput" name="username" type="text" value="<?php echo htmlspecialchars($username) ?>" >
+              <label for="emailInput" style="margin-top:8px;">Email</label>
+              <input id="emailInput" name="email" type="email" value="<?php echo htmlspecialchars($email) ?>" >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col">
+              <label for="senhaInput">Nova senha (opcional)</label>
+              <input id="senhaInput" name="password" type="password" placeholder="Deixe em branco para manter">
+            </div>
+          </div>
+
+          <div class="popup-footer">
+            <div class="popup-footer">
+              <button type="submit" class="btn-salvar">Salvar Alterações</button>
+              <button type="button" class="btn-cancelar" onclick="fecharPopups()">Cancelar</button>
+            </div>
+          </div>
+        </form>
+      </div>
 
     </section><!-- /Starter Section Section -->
 
@@ -433,6 +563,103 @@ $fotoPerfil = $usuario["fotoPerfil"];
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/scripts.js"></script>
+
+  <script>
+    // Controle de popups e preview de arquivos
+    (function(){
+      const overlay = document.getElementById('overlay');
+      const popupFoto = document.getElementById('popupEditarFoto');
+      const popupPerfil = document.getElementById('popupEditarPerfil');
+      const btnEditPhoto = document.getElementById('edit-photo-btn');
+      const btnEditProfile = document.getElementById('edit-profile-btn');
+
+      // inputs de preview/nome
+      const inputFotoPopup = document.getElementById('inputFotoPopup');
+      const previewFotoPopup = document.getElementById('previewFotoPopup');
+      const fileNamePopup = document.getElementById('fileNamePopup');
+
+      const inputFotoPerfil = document.getElementById('inputFotoPerfil');
+      const previewFotoPerfil = document.getElementById('previewFotoPerfil');
+      const fileNamePerfil = document.getElementById('fileNamePerfil');
+
+      function showOverlay() { overlay.style.display = 'block'; }
+      function hideOverlay() { overlay.style.display = 'none'; }
+
+      // abre popup editar foto
+      if(btnEditPhoto){
+        btnEditPhoto.addEventListener('click', function(){
+          popupFoto.style.display = 'flex';
+          showOverlay();
+        });
+      }
+
+      // abre popup editar perfil
+      if(btnEditProfile){
+        btnEditProfile.addEventListener('click', function(){
+          popupPerfil.style.display = 'flex';
+          showOverlay();
+        });
+      }
+
+      // fechar todos os popups
+      window.fecharPopups = function(){
+        if(popupFoto) popupFoto.style.display = 'none';
+        if(popupPerfil) popupPerfil.style.display = 'none';
+        hideOverlay();
+      };
+
+      // preview e nome do arquivo (popup foto)
+      if(inputFotoPopup){
+        inputFotoPopup.addEventListener('change', function(e){
+          const file = e.target.files[0];
+          if(file){
+            fileNamePopup.textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(ev){ previewFotoPopup.src = ev.target.result; };
+            reader.readAsDataURL(file);
+          } else {
+            fileNamePopup.textContent = 'Nenhum arquivo escolhido';
+            previewFotoPopup.src = "<?php echo htmlspecialchars($usuario['fotoPerfil']) ?>";
+          }
+        });
+      }
+
+      // preview e nome do arquivo (popup perfil)
+      if(inputFotoPerfil){
+        inputFotoPerfil.addEventListener('change', function(e){
+          const file = e.target.files[0];
+          if(file){
+            fileNamePerfil.textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(ev){ previewFotoPerfil.src = ev.target.result; };
+            reader.readAsDataURL(file);
+          } else {
+            fileNamePerfil.textContent = 'Nenhum arquivo escolhido';
+            previewFotoPerfil.src = "<?php echo htmlspecialchars($fotoPerfil) ?>";
+          }
+        });
+      }
+
+      // validação simples antes de enviar (exemplo)
+      const formEditarPerfil = document.getElementById('formEditarPerfil');
+      if(formEditarPerfil){
+        formEditarPerfil.addEventListener('submit', function(e){
+          const username = document.getElementById('usernameInput').value.trim();
+          if(!username){
+            e.preventDefault();
+            alert('O nome de usuário não pode ficar vazio.');
+            return false;
+          }
+          // outras validações podem ser adicionadas aqui
+        });
+      }
+
+      // fechar popup clicando no overlay
+      if(overlay){
+        overlay.addEventListener('click', fecharPopups);
+      }
+    })();
+  </script>
 
 </body>
 
