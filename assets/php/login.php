@@ -4,7 +4,6 @@
     session_start();
     include ('conexao.php');
 
-
     $email = $_POST["exampleInputEmail1"];
     $senha = $_POST["exampleInputPassword1"];
     $sql = "SELECT id FROM usuario WHERE email = ? AND senha = ?";

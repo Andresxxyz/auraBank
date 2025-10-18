@@ -236,6 +236,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             border: none;
             padding: 0;
             box-shadow: none;
+            padding-left: calc(var(--bs-gutter-x) * .5);
             margin-bottom: 10px;
         }
 
@@ -389,7 +390,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                             </div>
                         </div>
                         <hr class="my-4 opacity-25">
-                        <h4 class="mb-3 mt-0">Requisições Recentes</h4>
+                        <h4 class="mb-3 mt-0">Transações Recentes</h4>
                         <div class="requests-card mt-1">
                             <ul class="list-group list-group-flush">
                                 <?php if (empty($requisicoes)): ?>
