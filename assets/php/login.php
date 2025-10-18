@@ -1,6 +1,6 @@
 <?php
     $tempo_de_vida = 60 * 60 * 24 * 30;
-    session_set_cookie_params($tempo_de_vida, "/", null, true, true);
+    session_set_cookie_params($tempo_de_vida, "/", ".aurabank-dcf3eabkf8cdg3be.canadacentral-01.azurewebsites.net", true, true);
     session_start();
     include ('conexao.php');
 
