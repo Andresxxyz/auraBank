@@ -435,7 +435,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                         </div>
                         <div class="mb-3">
                             <label for="quantidade" class="form-label">Quantidade de Aura</label>
-                            <input type="number" class="form-control" id="quantidade" name="quantidade" min="1"
+                            <input type="number" class="form-control" id="quantidade" name="quantidade"
                                 required>
                         </div>
                         <div class="mb-3">
@@ -457,13 +457,17 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
     <script src="assets/js/main.js"></script>
 
     <script>
+        // Support multiple button classes/attributes that may trigger the modal.
         document.addEventListener('click', function (e) {
-            const btn = e.target.closest('.btn-req-aura');
+            // match legacy .btn-req-aura, current .btn-get-started, or any element that targets the modal
+            const btn = e.target.closest('.btn-req-aura, .btn-get-started, [data-bs-target="#reqModal"]');
             if (!btn) return;
-            const uid = btn.getAttribute('data-user-id');
-            const uname = btn.getAttribute('data-user-name');
-            document.getElementById('idDestinatario').value = uid;
-            document.getElementById('nomeDestinatario').value = uname;
+            const uid = btn.getAttribute('data-user-id') || '';
+            const uname = btn.getAttribute('data-user-name') || '';
+            const idInput = document.getElementById('idDestinatario');
+            const nameInput = document.getElementById('nomeDestinatario');
+            if (idInput) idInput.value = uid;
+            if (nameInput) nameInput.value = uname;
         });
     </script>
 </body>
