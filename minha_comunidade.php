@@ -355,7 +355,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                     <?php if (empty($requisicoes)): ?>
                                         <li class="list-group-item text-center py-4"
                                             style="background:transparent; border-color: #4f545c;">
-                                            <span class="text-secondary">Nenhuma requisição recente.</span>
+                                            <span class="text-secondary">Nenhuma transação recente.</span>
                                         </li>
                                     <?php else: ?>
                                         <?php foreach ($requisicoes as $req): ?>
@@ -368,9 +368,22 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                             <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
                                                         </div>
                                                         <div class="request-meta">
-                                                            Qtd: <?php echo (int) ($req['quantidade'] ?? 0); ?> •
-                                                            Motivo: <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?> •
-                                                            <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
+                                                            <b>Aura:</b> <?php echo (int) ($req['quantidade'] ?? 0); ?> •
+                                                            <b>Motivo:</b> <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?> •
+                                                            <b>Data</b> <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
+                                                            •
+                                                            <b>Votos a favor:</b> <?php
+                                                            $sqlVotos = "SELECT COUNT(*) AS votosFavor FROM requisicaousuario WHERE idRequisicao = ? AND votou = 1";
+                                                            $stmtVotos = $conn->prepare($sqlVotos);
+                                                            $stmtVotos->bind_param("i", $req['id']);
+                                                            $stmtVotos->execute();
+                                                            $resultadoVotos = $stmtVotos->get_result();
+                                                            $votos = $resultadoVotos->fetch_assoc();
+                                                            echo (int) ($votos['votosFavor'] ?? 0);
+                                                            ?>
+                                                            • <b>Votos necessários:</b> <?php echo ceil($comunidade['qtdMembros'] * 0.5); ?>
+
+                                                        
                                                         </div>
                                                     </div>
                                                 </div>
