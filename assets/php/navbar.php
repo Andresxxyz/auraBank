@@ -18,6 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <li><a href="#footer">Contato</a></li>
 
         <li><a href="searchComunidade.php">Comunidades</a></li>
+        <li><a href="#footer">Contato</a></li>
         <?php
         if (isset($_SESSION["user_id"])) {
             require('assets/php/conexao.php');
@@ -44,8 +45,8 @@ if (session_status() === PHP_SESSION_NONE) {
     if (!isset($_SESSION["user_id"])) {
       echo ("<a class='cta-btn' href='login.php'>Entre</a>
           <a href='cadastro.php' class='cta-btn'>Cadastre-se</a>");
-    } else {
-      echo ("<a class='cta-btn' href='assets/php/logout.php'>Sair</a>");
+    } else{
+      echo("<a class='cta-btn' href='assets/php/logout.php'>Sair</a>");
     }
     ?>
 
