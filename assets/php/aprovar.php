@@ -65,7 +65,7 @@ if ($idComunidade > 0) {
 
         // Approve when >= 50% of members voted yes (ceil to require at least half)
         if ($qtdMembros > 0 && $total >= ceil($qtdMembros * 0.5)) {
-            $sqlAprovar = "UPDATE requisicaoaura SET status = 'Aprovada' WHERE idrequisicaousuario = ?";
+            $sqlAprovar = "UPDATE requisicaoaura SET status = 'Aprovada' WHERE id = ?";
             if ($stmt = $conn->prepare($sqlAprovar)) {
                 $stmt->bind_param("i", $idRequisicao);
                 $stmt->execute();
