@@ -17,7 +17,7 @@ if ($idRequisicao <= 0) {
 }
 
 // Prevent duplicate votes from the same user
-$checkSql = "SELECT id FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
+$checkSql = "SELECT idrequisicaousuario FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
 if ($stmt = $conn->prepare($checkSql)) {
     $stmt->bind_param('ii', $idRequisicao, $userId);
     $stmt->execute();
@@ -65,7 +65,7 @@ if ($idComunidade > 0) {
 
         // Approve when >= 50% of members voted yes (ceil to require at least half)
         if ($qtdMembros > 0 && $total >= ceil($qtdMembros * 0.5)) {
-            $sqlAprovar = "UPDATE requisicaoaura SET status = 'Aprovada' WHERE id = ?";
+            $sqlAprovar = "UPDATE requisicaoaura SET status = 'Aprovada' WHERE idrequisicaousuario = ?";
             if ($stmt = $conn->prepare($sqlAprovar)) {
                 $stmt->bind_param("i", $idRequisicao);
                 $stmt->execute();
