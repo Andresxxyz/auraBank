@@ -30,7 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
             $stmt_navbar->execute();
             $resultado_navbar = $stmt_navbar->get_result();
             if ($resultado_navbar->num_rows > 0) {
-              echo ("<li><a href='comunidade.php'>Minha Comunidade</a></li>");
+              echo ("<li><a href='minha_comunidade.php'>Minha Comunidade</a></li>");
             }
         } 
         if (isset($_SESSION["user_id"])) {

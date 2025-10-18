@@ -81,7 +81,7 @@ if (isset($_SESSION["user_id"])) {
         if ($logado) {
 
           if ($comunidade) {
-            echo '<a href="comunidade.php" class="btn-get-started" data-aos="fade-up" data-aos-delay="300">Minha Comunidade</a>';
+            echo '<a href="minha_comunidade.php" class="btn-get-started" data-aos="fade-up" data-aos-delay="300">Minha Comunidade</a>';
 
           } else {
             

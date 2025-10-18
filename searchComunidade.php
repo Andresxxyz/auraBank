@@ -1,6 +1,6 @@
 <?php session_start();
 require('assets/php/conexao.php');
-$sql = "SELECT nomeComunidade, fotoComunidade, qtdMembros, qtdAura, data_criacao FROM comunidade
+$sql = "SELECT idComunidade, nomeComunidade, fotoComunidade, qtdMembros, qtdAura, data_criacao FROM comunidade
     ORDER BY data_criacao DESC";
 $resultado = $conn->query($sql);
 
@@ -165,6 +165,13 @@ $resultado = $conn->query($sql);
             cursor: pointer
         }
 
+        .community-card-link,
+        .community-card-link:hover {
+            text-decoration: none;
+            color: inherit; /* Herda a cor do texto do .community-card */
+            display: block; /* Faz o link ocupar o espaço do card */
+        }
+
         .community-card-header {
             position: relative;
             height: 220px;
@@ -292,27 +299,31 @@ $resultado = $conn->query($sql);
                 <div class="community-grid">
                     <?php if ($resultado && $resultado->num_rows > 0): ?>
                         <?php while ($comunidade = $resultado->fetch_assoc()): ?>
-                            <div class="community-card">
-                                <div class="community-card-header">
-                                    <img src="<?php echo htmlspecialchars($comunidade['fotoComunidade']) ?>" alt="Banner da Comunidade">
-                                </div>
-                                <div class="community-card-body">
-                                    <div class="aura-stats">
-                                        <span class="aura-label">Aura Acumulada</span>
-                                        <div class="aura-value">
-                                            <i class="bi bi-star-fill"></i>
-                                            <span><?php echo htmlspecialchars($comunidade['qtdAura']) ?></span>
-                                        </div>
+                            <a href="comunidade.php?idComunidade=<?php echo $comunidade['idComunidade']; ?>"
+                                class="community-card-link">
+                                <div class="community-card">
+                                    <div class="community-card-header">
+                                        <img src="<?php echo htmlspecialchars($comunidade['fotoComunidade']) ?>"
+                                            alt="Banner da Comunidade">
                                     </div>
-                                    <h3><?php echo htmlspecialchars($comunidade['nomeComunidade']) ?></h3>
-                                    <span class="members-count">
-                                        <i class="bi bi-people-fill"></i> <?php echo htmlspecialchars($comunidade['qtdMembros']) ?>
-                                    </span>
+                                    <div class="community-card-body">
+                                        <div class="aura-stats">
+                                            <span class="aura-label">Aura Acumulada</span>
+                                            <div class="aura-value">
+                                                <i class="bi bi-star-fill"></i>
+                                                <span><?php echo htmlspecialchars($comunidade['qtdAura']) ?></span>
+                                            </div>
+                                        </div>
+                                        <h3><?php echo htmlspecialchars($comunidade['nomeComunidade']) ?></h3>
+                                        <span class="members-count">
+                                            <i class="bi bi-people-fill"></i>
+                                            <?php echo htmlspecialchars($comunidade['qtdMembros']) ?>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php endwhile; ?>
+                            </a> <?php endwhile; ?>
                     <?php else: ?>
-                        <?php echo '<p class="text-center">Nenhum orientador cadastrado ainda.</p>'; ?>
+                        <?php echo '<p class="text-center">Nenhuma comunidade cadastrada ainda.</p>'; // Corrigido erro de digitação ?>
                     <?php endif; ?>
                     <?php $conn->close(); ?>
                 </div>

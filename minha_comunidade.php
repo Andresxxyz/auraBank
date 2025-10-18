@@ -8,27 +8,20 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// ALTERAÇÃO 1: Pegar o ID da comunidade da URL (GET)
-if (!isset($_GET['idComunidade']) || !is_numeric($_GET['idComunidade'])) {
-    // Se não houver ID ou não for um número, encerra
-    die("ID da comunidade inválido ou não fornecido.");
-}
-$idComunidade = (int) $_GET['idComunidade'];
-
-
-// ALTERAÇÃO 2: Removida a lógica antiga que buscava o ID pelo usuário logado
-/*
+// carregar a comunidade
 $sqlInfo = 'SELECT idComunidade FROM comunidadeusuario WHERE idUsuario=?';
-... (lógica antiga removida) ...
-$idComunidade = $resultadoInfo->fetch_assoc()['idComunidade'] ?? 0;
-*/
+$stmt = $conn->prepare($sqlInfo);
+$stmt->bind_param(
+    'i',
+    $_SESSION['user_id']
+);
+$stmt->execute();
+$resultadoInfo = $stmt->get_result();
 
-// ALTERAÇÃO 3: Buscar os dados da comunidade usando o ID da URL
 $comunidade = null;
 $sqlCom = 'SELECT * FROM comunidade WHERE idComunidade = ? ';
 if ($stmtCom = $conn->prepare($sqlCom)) {
-
-    // Usamos o $idComunidade pego do $_GET
+    $idComunidade = $resultadoInfo->fetch_assoc()['idComunidade'] ?? 0;
     if ($idComunidade > 0) {
         $stmtCom->bind_param('i', $idComunidade);
         $stmtCom->execute();
@@ -39,14 +32,6 @@ if ($stmtCom = $conn->prepare($sqlCom)) {
         $stmtCom->close();
     }
 }
-
-// ALTERAÇÃO 4: Verificar se a comunidade foi encontrada
-if (!$comunidade) {
-    die("Comunidade não encontrada.");
-}
-
-// O resto do seu código de carregar criador, membros e requisições 
-// já usava a variável $comunidade, então deve funcionar.
 
 if ($comunidade) {
     $sqlCriador = 'SELECT username FROM usuario WHERE id = ?';
@@ -64,7 +49,6 @@ if ($comunidade) {
 
 function carregarMembros($conn, $idComunidade)
 {
-    // ... (sua função carregarMembros está correta) ...
     if (!$idComunidade)
         return [];
     $sql = 'SELECT u.id, u.username, u.fotoPerfil, u.aura 
@@ -89,7 +73,6 @@ function carregarMembros($conn, $idComunidade)
 
 function carregarRequisicoes($conn, $idComunidade)
 {
-    // ... (sua função carregarRequisicoes está correta) ...
     if (!$idComunidade)
         return [];
     $sql = 'SELECT r.*, 
@@ -115,9 +98,9 @@ function carregarRequisicoes($conn, $idComunidade)
     return [];
 }
 
-// Essas funções agora usam o ID correto da comunidade carregada
 $requisicoes = carregarRequisicoes($conn, $comunidade['idComunidade'] ?? 0);
 $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -151,28 +134,6 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         }
 
         .main-content-card h4 {
-            color: #fff;
-        }
-
-        .btn-get-started,
-        .btn-salvar {
-            background: var(--accent-color);
-            color: var(--contrast-color);
-            font-weight: 400;
-            font-size: 14px;
-            letter-spacing: 1px;
-            display: inline-block;
-            padding: 10px 30px;
-            border-radius: 4px;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-weight: BOLD;
-            border: none;
-        }
-
-        .btn-get-started:hover,
-        .btn-salvar:hover {
-            background: color-mix(in srgb, var(--accent-color), transparent 20%);
             color: #fff;
         }
 
@@ -284,18 +245,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                             class="fw-semibold text-end"><?php echo htmlspecialchars(date('d/m/Y', strtotime($comunidade['data_criacao']))); ?></span>
                                     </li>
                                 </ul>
-                                <form action="assets/php/solicitarEntrada.php" method="post">
-
-                                    <input type="hidden" name="idComunidade"
-                                        value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
-
-                                    <div class="d-flex mt-4" style="gap: 2rem;">
-
-                                        <button type="submit" class="btn-get-started">Solicitar Entrada</button>
-
-                                        <a href="procurarComunidade.php" class="btn-login">Voltar</a>
-                                    </div>
-                                </form>
+                                <a href="searchComunidade.php" class="btn btn-login w-100 mt-auto">Voltar</a>
                             </div>
                         </div>
 
@@ -325,8 +275,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                 <tr>
                                                     <th scope="row" class="fs-5 fw-bold"
                                                         style="color: var(--accent-color); text-shadow: 0 4px 15px var(--accent-color);">
-                                                        <?php echo $key + 1; ?>
-                                                    </th>
+                                                        <?php echo $key + 1; ?></th>
                                                     <td>
                                                         <div class="d-flex align-items-center gap-3">
                                                             <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto"
@@ -344,7 +293,14 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                         </span>
                                                     </td>
                                                     <td class="text-center">
-
+                                                        <?php if ((int) $m['id'] !== (int) $_SESSION['user_id']): ?>
+                                                            <button type="button" class="btn btn-primary btn-sm btn-req-aura"
+                                                                data-bs-toggle="modal" data-bs-target="#reqModal"
+                                                                data-user-id="<?php echo (int) $m['id']; ?>"
+                                                                data-user-name="<?php echo htmlspecialchars($m['username']); ?>">
+                                                                Dar/Tirar Aura
+                                                            </button>
+                                                        <?php endif; ?>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -378,6 +334,11 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                             <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="badge bg-warning text-dark me-2">Pendente</span>
+                                                    <button class="btn btn-success btn-sm">Aprovar</button>
+                                                    <button class="btn btn-outline-danger btn-sm">Negar</button>
                                                 </div>
                                             </li>
                                         <?php endforeach; ?>

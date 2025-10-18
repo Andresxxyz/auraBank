@@ -958,6 +958,7 @@ section,
   text-transform: uppercase;
   font-weight: BOLD;
   border: none;
+  transition: 0.3s!important;
 }
 
 .hero .btn-get-started:hover, .btn-salvar:hover {

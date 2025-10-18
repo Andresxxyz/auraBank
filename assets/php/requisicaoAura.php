@@ -28,5 +28,5 @@ if ($stmt = $conn->prepare($sqlIns)) {
   $stmt->close();
 }
 
-header('Location: ../../comunidade.php?id=');
+header('Location: ../../minha_comunidade.php?id=');
 exit;
