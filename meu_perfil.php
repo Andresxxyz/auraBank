@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['user_id'])) {
   header("location: login.php");
 }
-$sql = "SELECT username, email, aura, fotoPerfil FROM usuario WHERE id = ?";
+$sql = "SELECT username, email, aura, fotoPerfil, cu.idComunidade, c.nomeComunidade FROM usuario u LEFT JOIN comunidadeusuario cu ON u.id = cu.idUsuario LEFT JOIN comunidade c ON cu.idComunidade = c.idComunidade WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $_SESSION['user_id']);
 $stmt->execute();
@@ -15,6 +15,9 @@ $username = $usuario["username"];
 $email = $usuario["email"];
 $aura = $usuario["aura"];
 $fotoPerfil = $usuario["fotoPerfil"];
+$comunidade = $usuario["nomeComunidade"]
+
+
 ?>
 
 
@@ -160,7 +163,7 @@ $fotoPerfil = $usuario["fotoPerfil"];
       margin-top: 5px;
     }
 
-    .profile-info .community-info .community-name {
+    .community-name {
       font-weight: 600;
       color: #e9ecef;
     }
@@ -358,6 +361,7 @@ $fotoPerfil = $usuario["fotoPerfil"];
     <div class="page-title dark-background" data-aos="fade">
       <div class="container position-relative">
         <h1>Meu Perfil</h1>
+        <p>Vizualize e edite o seu perfil.</p>
       </div>
     </div><!-- End Page Title -->
 
@@ -402,7 +406,11 @@ $fotoPerfil = $usuario["fotoPerfil"];
             <div class="profile-info">
               <h2 class="username"><?php echo htmlspecialchars($username) ?></h2>
               <p><?php echo htmlspecialchars($email) ?></p>
-              <p class="community-info">Membro de <span class="community-name">Comunidade Alpha</span></p>
+              <p class="community-info"><?php if($comunidade){
+                echo "Membro de <span class'community-name' style='font-weight: 600; color: #fff;'>" . htmlspecialchars($comunidade) . "</span>";
+              } else{
+                echo "Sem Comunidade";
+              }  ?></p>
             </div>
 
             <a href="#" class="btn-edit-profile">
