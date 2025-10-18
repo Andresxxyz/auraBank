@@ -80,13 +80,13 @@ function carregarMembros($conn, $idComunidade)
 }
 
 $qtdAprovacao = 0;
-if($comunidade['qtdMembros'] <= 10){
+if ($comunidade['qtdMembros'] <= 10) {
     $qtdAprovacao = 2;
-} elseif($comunidade['qtdMembros'] <= 30){
+} elseif ($comunidade['qtdMembros'] <= 30) {
     $qtdAprovacao = 5;
-} elseif($comunidade['qtdMembros'] <= 50){
+} elseif ($comunidade['qtdMembros'] <= 50) {
     $qtdAprovacao = 10;
-} elseif($comunidade['qtdMembros'] <= 100){
+} elseif ($comunidade['qtdMembros'] <= 100) {
     $qtdAprovacao = 15;
 } else {
     $qtdAprovacao = 20;
@@ -95,7 +95,8 @@ if($comunidade['qtdMembros'] <= 10){
 
 function carregarRequisicoes($conn, $idComunidade)
 {
-    if (!$idComunidade) return [];
+    if (!$idComunidade)
+        return [];
     $sql = 'SELECT 
                    r.id AS idRequisicao,
                    r.idComunidade,
@@ -168,6 +169,21 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             color: #fff;
         }
 
+        @media (max-width: 575px) {
+
+            #service-details{
+                padding: 0;
+            }
+
+            .container{
+                padding: 0;
+            }
+            .container, .main-content-card{
+                width: 100%;
+                border-radius: 0;
+            }
+        }
+
         .btn-get-started,
         .btn-salvar {
             background: var(--accent-color);
@@ -227,7 +243,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             --bs-table-bg: transparent;
             /* Fundo transparente para se mesclar */
             --bs-table-border-color: #4f545c;
-           
+
         }
 
         /* Ajustes na lista de informações da comunidade */
@@ -250,9 +266,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             font-size: 0.9rem;
         }
 
-        @media (max-width: 768px) {
-            
-        }
+        @media (max-width: 768px) {}
     </style>
 </head>
 
@@ -264,7 +278,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
         <div class="page-title dark-background" data-aos="fade">
             <div class="container position-relative">
-                <h1>Minha Comunidade</h1>
+                <h1>Comunidade</h1>
                 <p class="mb-0"><?php echo htmlspecialchars($comunidade['nomeComunidade'] ?? 'Comunidade'); ?></p>
             </div>
         </div>
@@ -319,8 +333,8 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                             </div>
                         </div>
 
-                    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
-                        <h4 class="mb-3">Ranking de Membros</h4>
+                        <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+                            <h4 class="mb-3">Ranking de Membros</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-dark table-striped align-middle">
@@ -372,38 +386,37 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                     </tbody>
                                 </table>
                             </div>
-
-                            <hr class="my-4 opacity-25">
-                            <h4 class="mb-3">Requisições Recentes</h4>
-                            <div class="requests-card">
-                                <ul class="list-group list-group-flush">
-                                    <?php if (empty($requisicoes)): ?>
-                                        <li class="list-group-item text-center py-4"
-                                            style="background:transparent; border-color: #4f545c;">
-                                            <span class="text-secondary">Nenhuma requisição recente.</span>
-                                        </li>
-                                    <?php else: ?>
-                                        <?php foreach ($requisicoes as $req): ?>
-                                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                                <div class="d-flex align-items-center gap-3">
-                                                    <div>
-                                                        <div class="fw-semibold">
-                                                            <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?>
-                                                            →
-                                                            <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
-                                                        </div>
-                                                        <div class="request-meta">
-                                                            Qtd: <?php echo (int) ($req['quantidade'] ?? 0); ?> •
-                                                            Motivo: <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?> •
-                                                            <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
-                                                        </div>
+                        </div>
+                        <hr class="my-4 opacity-25">
+                        <h4 class="mb-3 mt-0">Requisições Recentes</h4>
+                        <div class="requests-card mt-1">
+                            <ul class="list-group list-group-flush">
+                                <?php if (empty($requisicoes)): ?>
+                                    <li class="list-group-item text-center py-4"
+                                        style="background:transparent; border-color: #4f545c;">
+                                        <span class="text-secondary">Nenhuma requisição recente.</span>
+                                    </li>
+                                <?php else: ?>
+                                    <?php foreach ($requisicoes as $req): ?>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div>
+                                                    <div class="fw-semibold">
+                                                        <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?>
+                                                        →
+                                                        <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
+                                                    </div>
+                                                    <div class="request-meta">
+                                                        Qtd: <?php echo (int) ($req['quantidade'] ?? 0); ?> •
+                                                        Motivo: <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?> •
+                                                        <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
                                                     </div>
                                                 </div>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </ul>
-                            </div>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </ul>
                         </div>
                     </div>
                 </div>

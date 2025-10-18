@@ -138,6 +138,21 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             color: #fff;
         }
 
+        @media (max-width: 575px) {
+
+            #service-details{
+                padding: 0;
+            }
+
+            .container{
+                padding: 0;
+            }
+            .container, .main-content-card{
+                width: 100%;
+                border-radius: 0;
+            }
+        }
+
         .btn-login,
         .btn-cancelar {
             border: 1px solid var(--accent-color);
@@ -165,7 +180,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         .requests-card {
             background-color: transparent;
             border: none;
-            padding: 0;
+            padding-left: calc(var(--bs-gutter-x) * .5);
             box-shadow: none;
         }
 
@@ -331,9 +346,10 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                 </table>
                             </div>
 
-                            <hr class="my-4 opacity-25">
-                            <h4 class="mb-3">Requisições Recentes</h4>
-                            <div class="requests-card">
+                        </div>
+                        <hr class="my-4 opacity-25">
+                            <h4 class="mb-3 mt-0">Requisições Recentes</h4>
+                            <div class="requests-card mt-1">
                                 <ul class="list-group list-group-flush">
                                     <?php if (empty($requisicoes)): ?>
                                         <li class="list-group-item text-center py-4"
@@ -404,7 +420,6 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                     <?php endif; ?>
                                 </ul>
                             </div>
-                        </div>
                     </div>
                 </div>
         </section>
