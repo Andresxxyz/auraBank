@@ -1,6 +1,9 @@
 <?php
+    $tempo_de_vida = 60 * 60 * 24 * 30;
+    session_set_cookie_params($tempo_de_vida, "/", null, true, true);
     session_start();
     include ('conexao.php');
+
 
     $email = $_POST["exampleInputEmail1"];
     $senha = $_POST["exampleInputPassword1"];
