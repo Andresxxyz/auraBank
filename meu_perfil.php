@@ -440,6 +440,19 @@ $comunidade = $usuario["nomeComunidade"]
       z-index: 999;
       display: none;
     }
+
+    @media (max-width: 768px) {
+      .popup-editar-foto {
+        width: 90%;
+      }
+
+      .popup-editar-perfil {
+        width: 80%;
+      }
+      .popup-editar-perfil .btn-salvar, .popup-editar-perfil .btn-cancelar {
+        width: 80%;
+        height: 80%;
+    }
   </style>
 </head>
 
@@ -482,7 +495,7 @@ $comunidade = $usuario["nomeComunidade"]
                   style="display: none;"> <span id="fileNamePopup">Nenhum arquivo escolhido</span>
               </div>
             </div>
-            <div class="popup-footer"> <button type="submit" class="btn-salvar">Salvar Foto</button> <button
+            <div class="popup-footer"> <button type="submit" class="btn-salvar">Salvar</button> <button
                 type="button" class="btn-cancelar" onclick="fecharPopups()">Cancelar</button> </div>
           </form>
         </div>
@@ -533,9 +546,7 @@ $comunidade = $usuario["nomeComunidade"]
           
           <input type="hidden" name="action" value="update_profile">
           <div style="display:flex;gap:12px;align-items:center;">
-            <div class="image-preview-small">
-              <img id="previewFotoPerfil" src="<?php echo htmlspecialchars($fotoPerfil) ?>" alt="preview">
-            </div>
+            
             <div style="flex:1;">
               <label for="usernameInput">Nome de usuário</label>
               <input id="usernameInput" name="username" type="text" value="<?php echo htmlspecialchars($username) ?>" >
@@ -553,7 +564,7 @@ $comunidade = $usuario["nomeComunidade"]
 
           <div class="popup-footer">
             <div class="popup-footer">
-              <button type="submit" class="btn-salvar">Salvar Alterações</button>
+              <button type="submit" class="btn-salvar">Salvar</button>
               <button type="button" class="btn-cancelar" onclick="fecharPopups()">Cancelar</button>
             </div>
           </div>
