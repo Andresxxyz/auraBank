@@ -150,6 +150,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             .container, .main-content-card{
                 width: 100%;
                 border-radius: 0;
+                border: none;
             }
         }
 
