@@ -373,30 +373,53 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                             <b>Data</b> <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
                                                             •
                                                             <b>Votos a favor:</b> <?php
+                                                            // Contar votos a favor usando o id correto da requisição
                                                             $sqlVotos = "SELECT COUNT(*) AS votosFavor FROM requisicaousuario WHERE idRequisicao = ? AND votou = 1";
                                                             $stmtVotos = $conn->prepare($sqlVotos);
-                                                            $stmtVotos->bind_param("i", $req['id']);
+                                                            $reqIdForCount = isset($req['idRequisicao']) ? (int) $req['idRequisicao'] : (int) ($req['id'] ?? 0);
+                                                            $stmtVotos->bind_param("i", $reqIdForCount);
                                                             $stmtVotos->execute();
                                                             $resultadoVotos = $stmtVotos->get_result();
-                                                            $votos = $resultadoVotos->fetch_assoc();
+                                                            $votos = $resultadoVotos ? $resultadoVotos->fetch_assoc() : null;
                                                             echo (int) ($votos['votosFavor'] ?? 0);
                                                             ?>
-                                                            • <b>Votos necessários:</b> <?php echo ceil($comunidade['qtdMembros'] * 0.5); ?>
-                                                            • Você  <?php
-
+                                                            <?php
+                                                            // Recuperar qtdMembros da comunidade para calcular votos necessários
+                                                            $qtdMembros = 0;
+                                                            $sqlQtd = "SELECT qtdMembros FROM comunidade WHERE idComunidade = ?";
+                                                            if ($stmtQtd = $conn->prepare($sqlQtd)) {
+                                                                $comId = (int) ($comunidade['idComunidade'] ?? 0);
+                                                                $stmtQtd->bind_param("i", $comId);
+                                                                $stmtQtd->execute();
+                                                                $resQtd = $stmtQtd->get_result();
+                                                                $qtdMembros = (int) ($resQtd->fetch_assoc()['qtdMembros'] ?? 0);
+                                                                $stmtQtd->close();
+                                                            }
+                                                            // votos necessários: metade dos membros, arredondando para cima (mínimo 1 se houver membros)
+                                                            $votosNecessarios = $qtdMembros > 0 ? (int) ceil($qtdMembros * 0.5) : 0;
+                                                            ?>
+                                                            • <b>Votos necessários:</b> <?php echo $votosNecessarios; ?>
+                                                            •
+                                                            <?php
+                                                            // Ler se o usuário votou: tratar ausência como "não votou"
                                                             $sqlVotou = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
                                                             $stmtVotou = $conn->prepare($sqlVotou);
-                                                            $stmtVotou->bind_param("ii", $req['id'], $_SESSION['user_id']);
+                                                            $userId = (int) ($_SESSION['user_id'] ?? 0);
+                                                            $reqId = isset($req['idRequisicao']) ? (int) $req['idRequisicao'] : (int) ($req['id'] ?? 0);
+                                                            $stmtVotou->bind_param("ii", $reqId, $userId);
                                                             $stmtVotou->execute();
-                                                            $votou =  $stmtVotou->get_result() ->fetch_assoc()['votou'] ?? null;
+                                                            $resVotou = $stmtVotou->get_result();
+                                                            $rowVotou = $resVotou ? $resVotou->fetch_assoc() : null;
+                                                            // Se não existir linha -> null (não votou). Caso exista, normalizar para int 0/1.
+                                                            $votou = isset($rowVotou['votou']) ? (int) $rowVotou['votou'] : null;
                                                             
-
-                                                            if ($votou == 1) {
-                                                                echo "aprovou";
-                                                            } elseif ($votou == 0) {
-                                                                echo "negou";
-                                                            } else {
-                                                                echo "não votou";
+                                                            echo " Você ";
+                                                            if ($votou === 1) {
+                                                                echo "aprovou.";
+                                                            } elseif ($votou === 0) {
+                                                                echo "negou.";
+                                                            } elseif ($votou === null) {
+                                                                echo "não votou.";
                                                             }
                                                             ?>
                                                         </div>
