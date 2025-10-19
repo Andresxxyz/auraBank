@@ -60,6 +60,12 @@ $comunidade = $usuario["nomeComunidade"]
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
   <style>
+    body{
+      overflow-x: hidden;
+      scrollbar-width: none; 
+      scroll-padding: 0;
+      
+    }
     .container {
       width: 100%;
     }

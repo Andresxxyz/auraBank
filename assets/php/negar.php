@@ -17,7 +17,7 @@ if ($idRequisicao <= 0) {
 }
 
 // Prevent duplicate votes from the same user
-$checkSql = "SELECT id FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
+$checkSql = "SELECT idrequisicaousuario FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
 if ($stmt = $conn->prepare($checkSql)) {
     $stmt->bind_param('ii', $idRequisicao, $userId);
     $stmt->execute();
