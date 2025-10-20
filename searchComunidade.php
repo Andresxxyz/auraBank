@@ -168,8 +168,10 @@ $resultado = $conn->query($sql);
         .community-card-link,
         .community-card-link:hover {
             text-decoration: none;
-            color: inherit; /* Herda a cor do texto do .community-card */
-            display: block; /* Faz o link ocupar o espaço do card */
+            color: inherit;
+            /* Herda a cor do texto do .community-card */
+            display: block;
+            /* Faz o link ocupar o espaço do card */
         }
 
         .community-card-header {
@@ -311,7 +313,14 @@ $resultado = $conn->query($sql);
                                             <span class="aura-label">Aura Acumulada</span>
                                             <div class="aura-value">
                                                 <i class="bi bi-star-fill"></i>
-                                                <span><?php echo htmlspecialchars($comunidade['qtdAura']) ?></span>
+                                                <span><?php
+                                                $sqlAura = "SELECT sum(aura) FROM usuario 
+                                                JOIN comunidadeUsuario ON usuario.id = comunidadeusuario.idUsuario
+                                                WHERE idComunidade = " . $comunidade['idComunidade'];
+                                                $resultAura = $conn->query($sqlAura);
+                                                $rowAura = $resultAura->fetch_row();
+                                                echo htmlspecialchars($rowAura[0]);
+                                                ?></span>
                                             </div>
                                         </div>
                                         <h3><?php echo htmlspecialchars($comunidade['nomeComunidade']) ?></h3>
