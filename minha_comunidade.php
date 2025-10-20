@@ -138,7 +138,12 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             color: #fff;
         }
 
-        @media (max-width: 575px) {
+        .div-form-aceitar-negar {
+            display: flex;
+            flex-direction: row;
+            
+        }
+        @media (max-width: 768px) {
 
             #service-details {
                 padding: 0;
@@ -156,19 +161,14 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             }
 
             .div-form-aceitar-negar {
-                display: flex;
+                
                 flex-direction: column;
                 gap: 10px;
                 align-items: flex-start;
             }
         }
 
-        .div-form-aceitar-negar {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            align-items: flex-start;
-        }
+        
 
         .btn-login,
         .btn-cancelar {
