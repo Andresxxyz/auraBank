@@ -173,16 +173,25 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         .btn-login,
         .btn-cancelar {
             border: 1px solid var(--accent-color);
-            color: var(--accent-color);
+            color: color-mix(in srgb, var(--accent-color), transparent 20%);
             font-weight: bold;
             font-size: 14px;
             letter-spacing: 1px;
             display: inline-block;
             padding: 10px 30px;
             border-radius: 4px;
-            transition: 0.3s;
-            text-transform: uppercase;
-            background-color: #00000004;
+           
+            
+            
+            
+            
+           
+            
+            
+         
+            
+            border: none;
+            transition: 0.3s !important;
         }
 
         .btn-login:hover,
@@ -562,8 +571,8 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                         </div>
                     </div>
                     <div class="modal-footer border-secondary">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
+                        <button type="button" class=" btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class=" btn-login">Enviar</button>
                     </div>
                 </form>
             </div>
