@@ -160,96 +160,103 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                 flex-direction: column;
                 gap: 10px;
                 align-items: flex-start;
-
             }
+        }
 
-            .btn-login,
-            .btn-cancelar {
-                border: 1px solid var(--accent-color);
-                color: var(--accent-color);
-                font-weight: bold;
-                font-size: 14px;
-                letter-spacing: 1px;
-                display: inline-block;
-                padding: 10px 30px;
-                border-radius: 4px;
-                transition: 0.3s;
-                text-transform: uppercase;
-                background-color: #00000004;
-            }
+        .div-form-aceitar-negar {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: flex-start;
+        }
 
-            .btn-login:hover,
-            .btn-cancelar:hover {
-                background: color-mix(in srgb, var(--accent-color), transparent 20%);
-                color: #fff;
-            }
+        .btn-login,
+        .btn-cancelar {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            display: inline-block;
+            padding: 10px 30px;
+            border-radius: 4px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            background-color: #00000004;
+        }
+
+        .btn-login:hover,
+        .btn-cancelar:hover {
+            background: color-mix(in srgb, var(--accent-color), transparent 20%);
+            color: #fff;
+        }
 
 
-            /* MODIFICADO: Removemos o estilo dos cards internos para que fiquem transparentes */
-            .community-info-card,
-            .requests-card {
-                background-color: transparent;
-                border: none;
-                padding-left: calc(var(--bs-gutter-x) * .5);
-                box-shadow: none;
-            }
+        /* MODIFICADO: Removemos o estilo dos cards internos para que fiquem transparentes */
+        .community-info-card,
+        .requests-card {
+            background-color: transparent;
+            border: none;
+            padding-left: calc(var(--bs-gutter-x) * .5);
+            box-shadow: none;
+        }
 
-            /* Ajustes na tabela para o tema escuro */
-            .table-dark {
-                --bs-table-bg: transparent;
-                /* Fundo transparente para se mesclar */
-                --bs-table-border-color: #4f545c;
-            }
+        /* Ajustes na tabela para o tema escuro */
+        .table-dark {
+            --bs-table-bg: transparent;
+            /* Fundo transparente para se mesclar */
+            --bs-table-border-color: #4f545c;
+        }
 
-            /* Ajustes na lista de informações da comunidade */
-            .community-info-card .list-group-item {
-                background: transparent;
-                color: #f0f0f0;
-                border-color: #4f545c !important;
-                /* Força a cor da borda */
-            }
+        /* Ajustes na lista de informações da comunidade */
+        .community-info-card .list-group-item {
+            background: transparent;
+            color: #f0f0f0;
+            border-color: #4f545c !important;
+            /* Força a cor da borda */
+        }
 
-            /* Card de requisições */
-            .requests-card .list-group-item {
-                background: transparent;
-                color: #f0f0f0;
-                border-color: #4f545c;
-            }
+        /* Card de requisições */
+        .requests-card .list-group-item {
+            background: transparent;
+            color: #f0f0f0;
+            border-color: #4f545c;
+        }
 
-            .requests-card .request-meta {
-                color: #b7bcc4;
-                font-size: 0.9rem;
-            }
+        .requests-card .request-meta {
+            color: #b7bcc4;
+            font-size: 0.9rem;
+        }
 
-            .btn-get-started,
-            .btn-salvar {
-                background: var(--accent-color);
-                color: var(--contrast-color);
-                font-weight: 400;
-                font-size: 14px;
-                letter-spacing: 1px;
-                display: inline-block;
-                padding: 5px 10px;
-                border-radius: 4px;
-                transition: 0.3s;
-                text-transform: uppercase;
-                font-weight: BOLD;
-                border: none;
-                transition: 0.3s !important;
-            }
+        .btn-get-started,
+        .btn-salvar {
+            background: var(--accent-color);
+            color: var(--contrast-color);
+            font-weight: 400;
+            font-size: 14px;
+            letter-spacing: 1px;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-weight: BOLD;
+            border: none;
+            transition: 0.3s !important;
+        }
 
-            .btn-get-started:hover,
-            .btn-salvar:hover {
-                background: color-mix(in srgb, var(--accent-color), transparent 20%);
-            }
+        .btn-get-started:hover,
+        .btn-salvar:hover {
+            background: color-mix(in srgb, var(--accent-color), transparent 20%);
+        }
 
-            .pill {
-                background-color: #f88f05a4;
-                border-radius: 20px;
-                padding: 5px 5px;
-                color: white;
-                margin: 0px 0px 5px 0px;
-            }
+        .pill {
+            background-color: #f88f05a4;
+            border-radius: 20px;
+            padding: 5px 5px;
+            color: white;
+            margin: 0px 0px 5px 0px;
+        }
     </style>
 </head>
 
@@ -499,8 +506,8 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                         </form>
                                                     </div>
 
-                                                <?php }else { ?>
-                                                     <div class="div-form-aceitar-negar">
+                                                <?php } else { ?>
+                                                    <div class="div-form-aceitar-negar">
                                                         <?php if ($req['status'] === 'Aprovada'): ?>
                                                             <span class="badge bg-success me-2">Aprovada</span>
                                                         <?php elseif ($req['status'] === 'Negada'): ?>
@@ -508,7 +515,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                         <?php else: ?>
                                                             <span class="badge bg-warning text-dark me-2">Pendente</span>
                                                         <?php endif; ?>
-                                                            
+
                                                     </div>
                                                 <?php } ?>
                                             </div>
