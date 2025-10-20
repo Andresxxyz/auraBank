@@ -79,12 +79,12 @@ function carregarRequisicoes($conn, $idComunidade)
     $sql = 'SELECT r.*, r.id AS idRequisicao, 
              sr.username AS remetenteNome, 
              sd.username AS destinatarioNome
-         FROM requisicaoAura r
-         JOIN usuario sr ON r.idRemetente = sr.id
-         JOIN usuario sd ON r.idDestinatario = sd.id
-         WHERE r.idComunidade = ?
-         ORDER BY r.dtCriacao DESC
-         LIMIT 10';
+       FROM requisicaoAura r
+       JOIN usuario sr ON r.idRemetente = sr.id
+       JOIN usuario sd ON r.idDestinatario = sd.id
+       WHERE r.idComunidade = ?
+       ORDER BY r.dtCriacao DESC
+       LIMIT 10';
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param('i', $idComunidade);
         $stmt->execute();
@@ -124,7 +124,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
     <link href="assets/css/main.css" rel="stylesheet">
 
     <style>
-        /* MODIFICADO: Estilo do card principal que envolve todo o conteúdo */
+
         .main-content-card {
             background-color: #2c2f33;
             color: #f0f0f0;
@@ -141,8 +141,9 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         .div-form-aceitar-negar {
             display: flex;
             flex-direction: row;
-            
+
         }
+
         @media (max-width: 768px) {
 
             #service-details {
@@ -161,14 +162,14 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             }
 
             .div-form-aceitar-negar {
-                
+
                 flex-direction: column;
                 gap: 10px;
                 align-items: flex-start;
             }
         }
 
-        
+
 
         .btn-login,
         .btn-cancelar {
@@ -180,16 +181,8 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             display: inline-block;
             padding: 10px 30px;
             border-radius: 4px;
-           
-            
-            
-            
-            
-           
-            
-            
-         
-            
+
+
             border: none;
             transition: 0.3s !important;
         }
@@ -201,7 +194,6 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         }
 
 
-        /* MODIFICADO: Removemos o estilo dos cards internos para que fiquem transparentes */
         .community-info-card,
         .requests-card {
             background-color: transparent;
@@ -210,19 +202,19 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             box-shadow: none;
         }
 
-        /* Ajustes na tabela para o tema escuro */
+
         .table-dark {
             --bs-table-bg: transparent;
-            /* Fundo transparente para se mesclar */
+
             --bs-table-border-color: #4f545c;
         }
 
-        /* Ajustes na lista de informações da comunidade */
+
         .community-info-card .list-group-item {
             background: transparent;
             color: #f0f0f0;
             border-color: #4f545c !important;
-            /* Força a cor da borda */
+
         }
 
         /* Card de requisições */
@@ -260,11 +252,87 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         }
 
         .pill {
-            background-color: #f88f05a4;
             border-radius: 20px;
             padding: 5px 5px;
             color: white;
             margin: 0px 0px 5px 0px;
+        }
+
+
+
+        .requests-card .list-group-item {
+
+        }
+
+        .transaction-info {
+            flex-grow: 1;
+            padding-right: 15px;
+        }
+
+    
+        .transaction-actions {
+            text-align: left; 
+            min-width: 0;
+            flex-shrink: 1;
+            margin-top: 15px; 
+            
+          
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px; 
+        }
+
+      
+        .transaction-actions .badge {
+            margin-bottom: 0; 
+            display: inline-block;
+        }
+
+
+        .transaction-actions .div-form-aceitar-negar {
+            flex-direction: row; 
+            justify-content: flex-start; 
+            gap: 8px;
+            margin-top: 0;
+        }
+
+
+        .vote-info-container {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-top: 10px; 
+        }
+
+        .vote-info-box {
+            border: 1px solid #4f545c;
+            border-radius: 5px;
+            padding: 8px 12px;
+            text-align: center; 
+            min-width: 110px; 
+            background-color: transparent; 
+        }
+
+
+        .vote-number {
+            font-size: 1.25rem; 
+            font-weight: bold;
+            color: var(--accent-color); 
+            line-height: 1.2;
+        }
+        
+
+        .vote-label {
+            font-size: 0.8rem; 
+            color: #b7bcc4;
+        }
+
+
+        .transaction-footer {
+            font-size: 0.9rem;
+            color: #b7bcc4;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -394,67 +462,103 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                     </li>
                                 <?php else: ?>
                                     <?php foreach ($requisicoes as $req): ?>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                            <div class="d-flex align-items-center gap-3">
-                                                <div>
-                                                    <div class="fw-semibold">
-                                                        <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?>
-                                                        →
-                                                        <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
-                                                    </div>
-                                                    <div class="request-meta">
-                                                        <div class="pill">
-                                                            <b>Aura:</b> <?php echo (int) ($req['quantidade'] ?? 0); ?>
-                                                            <br>
-                                                            <b>Motivo:</b>
-                                                            <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?>
+                                        
+                                        <li class="list-group-item py-3"> <div class="transaction-info">
+                                                
+                                                <div class="fw-semibold">
+                                                    <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?>
+                                                    →
+                                                    <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
+                                                </div>
+                                
+                                                <div class="request-meta mt-1">
+                                                    <div><b>Aura:</b> <?php echo (int) ($req['quantidade'] ?? 0); ?></div>
+                                                    <div><b>Motivo:</b> <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?></div>
+                                                </div>
+
+                                                <div class="vote-info-container">
+                                                    
+                                                    <div class="vote-info-box">
+                                                        <div class="vote-number">
+                                                            <?php
+                                                            // Contar votos a favor
+                                                            $sqlVotos = "SELECT COUNT(*) AS votosFavor FROM requisicaousuario WHERE idRequisicao = ? AND votou = 1";
+                                                            $stmtVotos = $conn->prepare($sqlVotos);
+                                                            $reqIdForCount = isset($req['idRequisicao']) ? (int) $req['idRequisicao'] : (int) ($req['id'] ?? 0);
+                                                            $stmtVotos->bind_param("i", $reqIdForCount);
+                                                            $stmtVotos->execute();
+                                                            $resultadoVotos = $stmtVotos->get_result();
+                                                            $votos = $resultadoVotos ? $resultadoVotos->fetch_assoc() : null;
+                                                            echo (int) ($votos['votosFavor'] ?? 0);
+                                                            ?>
                                                         </div>
+                                                        <div class="vote-label">Votos a favor</div>
+                                                    </div>
 
+                                                    <div class="vote-info-box">
+                                                        <div class="vote-number">
+                                                            <?php
+                                                            // Recuperar qtdMembros da comunidade para calcular votos necessários
+                                                            $qtdMembros = 0;
+                                                            $sqlQtd = "SELECT qtdMembros FROM comunidade WHERE idComunidade = ?";
+                                                            if ($stmtQtd = $conn->prepare($sqlQtd)) {
+                                                                $comId = (int) ($comunidade['idComunidade'] ?? 0);
+                                                                $stmtQtd->bind_param("i", $comId);
+                                                                $stmtQtd->execute();
+                                                                $resQtd = $stmtQtd->get_result();
+                                                                $qtdMembros = (int) ($resQtd->fetch_assoc()['qtdMembros'] ?? 0);
+                                                                $stmtQtd->close();
+                                                            }
+                                                            $votosNecessarios = $qtdMembros > 0 ? (int) ceil($qtdMembros * 0.5) : 0;
+                                                            ?>
+                                                            <?php echo $votosNecessarios; ?>
+                                                        </div>
+                                                        <div class="vote-label">Votos necessários</div>
+                                                    </div>
+                                                </div>
 
-                                                        <b>Votos a favor:</b> <?php
-                                                        // Contar votos a favor usando o id correto da requisição
-                                                        $sqlVotos = "SELECT COUNT(*) AS votosFavor FROM requisicaousuario WHERE idRequisicao = ? AND votou = 1";
-                                                        $stmtVotos = $conn->prepare($sqlVotos);
-                                                        $reqIdForCount = isset($req['idRequisicao']) ? (int) $req['idRequisicao'] : (int) ($req['id'] ?? 0);
-                                                        $stmtVotos->bind_param("i", $reqIdForCount);
-                                                        $stmtVotos->execute();
-                                                        $resultadoVotos = $stmtVotos->get_result();
-                                                        $votos = $resultadoVotos ? $resultadoVotos->fetch_assoc() : null;
-                                                        echo (int) ($votos['votosFavor'] ?? 0);
-                                                        ?>
-                                                        <br>
+                                                <div class="transaction-actions">
+                                                    <?php if ($req['status'] === 'Aprovada'): ?>
+                                                        <span class="badge bg-success">Aprovada</span>
+                                                    <?php elseif ($req['status'] === 'Negada'): ?>
+                                                        <span class="badge bg-danger">Negada</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-warning text-dark">Pendente</span>
+                                                    <?php endif; ?>
+                                    
+                                                    <?php
+                                                    $sqlVotou = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
+                                                    $stmtVotou = $conn->prepare($sqlVotou);
+                                                    $userId = (int) ($_SESSION['user_id'] ?? 0);
+                                                    $reqId = isset($req['idRequisicao']) ? (int) $req['idRequisicao'] : (int) ($req['id'] ?? 0);
+                                                    $stmtVotou->bind_param("ii", $reqId, $userId);
+                                                    $stmtVotou->execute();
+                                                    $resVotou = $stmtVotou->get_result();
+                                                    $rowVotou = $resVotou ? $resVotou->fetch_assoc() : null;
+                                                    $votou = isset($rowVotou['votou']) ? (int) $rowVotou['votou'] : null;
+
+                                                    if (strtolower($req['status']) === 'pendente' && $votou === null) { 
+                                                    ?>
+                                                        <div class="div-form-aceitar-negar"> 
+                                                            <form action="assets/php/aprovar.php" method="post" style="margin: 0;">
+                                                                <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                                <input type="hidden" name="idDestinatario" value="<?php echo (int) ($req['idDestinatario'] ?? 0); ?>">
+                                                                <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
+                                                                <button class="btn btn-success btn-sm">Aprovar</button>
+                                                            </form>
+                                                            <form action="assets/php/negar.php" method="post" style="margin: 0;">
+                                                                <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                                <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
+                                                                <button class="btn btn-outline-danger btn-sm">Negar</button>
+                                                            </form>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                
+                                                <div class="transaction-footer d-flex justify-content-between">
+                                                    <span>
                                                         <?php
-                                                        // Recuperar qtdMembros da comunidade para calcular votos necessários
-                                                        $qtdMembros = 0;
-                                                        $sqlQtd = "SELECT qtdMembros FROM comunidade WHERE idComunidade = ?";
-                                                        if ($stmtQtd = $conn->prepare($sqlQtd)) {
-                                                            $comId = (int) ($comunidade['idComunidade'] ?? 0);
-                                                            $stmtQtd->bind_param("i", $comId);
-                                                            $stmtQtd->execute();
-                                                            $resQtd = $stmtQtd->get_result();
-                                                            $qtdMembros = (int) ($resQtd->fetch_assoc()['qtdMembros'] ?? 0);
-                                                            $stmtQtd->close();
-                                                        }
-                                                        // votos necessários: metade dos membros, arredondando para cima (mínimo 1 se houver membros)
-                                                        $votosNecessarios = $qtdMembros > 0 ? (int) ceil($qtdMembros * 0.5) : 0;
-                                                        ?>
-
-                                                        <b>Votos necessários:</b> <?php echo $votosNecessarios; ?>
-                                                        <br>
-                                                        <?php
-                                                        // Ler se o usuário votou: tratar ausência como "não votou"
-                                                        $sqlVotou = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
-                                                        $stmtVotou = $conn->prepare($sqlVotou);
-                                                        $userId = (int) ($_SESSION['user_id'] ?? 0);
-                                                        $reqId = isset($req['idRequisicao']) ? (int) $req['idRequisicao'] : (int) ($req['id'] ?? 0);
-                                                        $stmtVotou->bind_param("ii", $reqId, $userId);
-                                                        $stmtVotou->execute();
-                                                        $resVotou = $stmtVotou->get_result();
-                                                        $rowVotou = $resVotou ? $resVotou->fetch_assoc() : null;
-                                                        // Se não existir linha -> null (não votou). Caso exista, normalizar para int 0/1.
-                                                        $votou = isset($rowVotou['votou']) ? (int) $rowVotou['votou'] : null;
-
-                                                        echo " Você ";
+                                                        echo "Você ";
                                                         if ($votou === 1) {
                                                             echo "aprovou.";
                                                         } elseif ($votou === 0) {
@@ -463,73 +567,15 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                             echo "não votou.";
                                                         }
                                                         ?>
-                                                        <br>
-
-                                                        <b>Data</b>
-                                                        <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
-                                                    </div>
+                                                    </span>
+                                                    <span>
+                                                        <b>Data:</b> <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <?php
-                                                $sqlRequisicaousuario = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
-                                                $votou = null;
-                                                if ($stmt = $conn->prepare($sqlRequisicaousuario)) {
-                                                    $userId = (int) ($_SESSION['user_id'] ?? 0);
-                                                    $reqId = isset($req['idRequisicao']) ? (int) $req['idRequisicao'] : (int) ($req['id'] ?? 0);
-                                                    $stmt->bind_param("ii", $reqId, $userId);
-                                                    $stmt->execute();
-                                                    $res = $stmt->get_result();
-                                                    if ($res && ($row = $res->fetch_assoc())) {
-                                                        $votou = isset($row['votou']) ? (int) $row['votou'] : null;
-                                                    }
-                                                    $stmt->close();
-                                                }
-                                                if ($votou !== 1 && $votou !== 0) {
-                                                    ?>
-
-                                                    <div class="div-form-aceitar-negar">
-                                                        <?php if ($req['status'] === 'Aprovada'): ?>
-                                                            <span class="badge bg-success me-2">Aprovada</span>
-                                                        <?php elseif ($req['status'] === 'Negada'): ?>
-                                                            <span class="badge bg-danger me-2">Negada</span>
-                                                        <?php else: ?>
-                                                            <span class="badge bg-warning text-dark me-2">Pendente</span>
-                                                        <?php endif; ?>
-
-                                                        <form action="assets/php/aprovar.php" method="post">
-                                                            <input type="hidden" name="idRequisicao"
-                                                                value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
-                                                            <input type="hidden" name="idDestinatario"
-                                                                value="<?php echo (int) ($req['idDestinatario'] ?? 0); ?>">
-                                                            <input type="hidden" name="idComunidade"
-                                                                value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
-                                                            <button class="btn btn-success btn-sm">Aprovar</button>
-                                                        </form>
-                                                        <form action="assets/php/negar.php" method="post">
-                                                            <input type="hidden" name="idRequisicao"
-                                                                value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
-                                                            <input type="hidden" name="idComunidade"
-                                                                value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
-                                                            <button class="btn btn-outline-danger btn-sm">Negar</button>
-                                                        </form>
-                                                    </div>
-
-                                                <?php } else { ?>
-                                                    <div class="div-form-aceitar-negar">
-                                                        <?php if ($req['status'] === 'Aprovada'): ?>
-                                                            <span class="badge bg-success me-2">Aprovada</span>
-                                                        <?php elseif ($req['status'] === 'Negada'): ?>
-                                                            <span class="badge bg-danger me-2">Negada</span>
-                                                        <?php else: ?>
-                                                            <span class="badge bg-warning text-dark me-2">Pendente</span>
-                                                        <?php endif; ?>
-
-                                                    </div>
-                                                <?php } ?>
-                                            </div>
+                                
                                         </li>
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
                                 <?php endif; ?>
                             </ul>
                         </div>
@@ -581,12 +627,10 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/aos/aos.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js"></script> 
 
     <script>
-        // Support multiple button classes/attributes that may trigger the modal.
         document.addEventListener('click', function (e) {
-            // match legacy .btn-req-aura, current .btn-get-started, or any element that targets the modal
             const btn = e.target.closest('.btn-req-aura, .btn-get-started, [data-bs-target="#reqModal"]');
             if (!btn) return;
             const uid = btn.getAttribute('data-user-id') || '';
