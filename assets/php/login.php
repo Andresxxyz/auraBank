@@ -15,7 +15,7 @@
     if($resultado->num_rows>0){
         $usuario = $resultado->fetch_assoc();
         $_SESSION['user_id'] = $usuario["id"];
-        header("location: ../../comunidade.php");
+        header("location: ../../index.php");
     } else{
         echo "usuario nao encontrado";
     }
