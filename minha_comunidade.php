@@ -15,6 +15,7 @@ $stmt->bind_param(
     'i',
     $_SESSION['user_id']
 );
+
 $stmt->execute();
 $resultadoInfo = $stmt->get_result();
 

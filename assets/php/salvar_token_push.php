@@ -20,6 +20,7 @@ if (empty($token)) {
 $idUsuario = (int)$_SESSION['user_id'];
 
 // Atualiza o token do usuário no banco
+
 $sql = "UPDATE usuario SET token_push = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('si', $token, $idUsuario);
