@@ -658,7 +658,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                 console.log('[AuraBank] Timeout de 500ms concluído.'); // LOG 2.5
 
                 // 1. VERIFICAR SE ESTAMOS DENTRO DO APLICATIVO
-                if (typeof capacitor !== 'undefined' && capacitor.isNativePlatform && capacitor.isNativePlatform()) {
+                if (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform && Capacitor.isNativePlatform()) {
 
                     console.log('[AuraBank] Plataforma nativa Capacitor DETECTADA após Timeout.'); // LOG 3
 
@@ -725,6 +725,10 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                 console.log('[AuraBank] Notificação recebida com app aberto:', notification);
                                 alert(`Nova votação: ${notification.body}`);
                             });
+
+                            console.log('[AuraBank] Capacitor global:', window.Capacitor);
+                            console.log('[AuraBank] Plugins disponíveis:', Capacitor?.Plugins);
+
 
                         } catch (err) {
                             console.error('[AuraBank] ERRO GERAL no iniciarNotificacoes:', err);
