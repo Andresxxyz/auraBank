@@ -335,6 +335,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 </head>
 
 <body class="service-details-page">
+    <script>console.log('[AuraBank] HTML CARREGADO!');</script>
 
     <?php include 'assets/php/navbar.php'; ?>
 
