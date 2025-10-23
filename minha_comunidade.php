@@ -689,17 +689,17 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
                             // 3. Registrar botões
                             console.log('[AuraBank] Registrando tipos de ação...'); // LOG 10
-                            await PushNotifications.registerActionTypes({
-                                types: [
-                                    {
-                                        id: 'VOTACAO_TRANSAO',
-                                        actions: [
-                                            { id: 'aprovar_voto', title: 'Aprovar' },
-                                            { id: 'negar_voto', title: 'Negar', destructive: true }
-                                        ]
-                                    }
-                                ]
-                            });
+                            // await PushNotifications.registerActionTypes({
+                            //     types: [
+                            //         {
+                            //             id: 'VOTACAO_TRANSAO',
+                            //             actions: [
+                            //                 { id: 'aprovar_voto', title: 'Aprovar' },
+                            //                 { id: 'negar_voto', title: 'Negar', destructive: true }
+                            //             ]
+                            //         }
+                            //     ]
+                            // });
                             console.log('[AuraBank] Tipos de ação registrados.'); // LOG 11
 
                             // 4. Registrar no Firebase
