@@ -15,7 +15,6 @@ $stmt->bind_param(
     'i',
     $_SESSION['user_id']
 );
-
 $stmt->execute();
 $resultadoInfo = $stmt->get_result();
 
@@ -123,9 +122,9 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
     <link href="assets/css/main.css" rel="stylesheet">
-    <script src="capacitor.js"></script>
 
     <style>
+
         .main-content-card {
             background-color: #2c2f33;
             color: #f0f0f0;
@@ -261,37 +260,39 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
 
 
-        .requests-card .list-group-item {}
+        .requests-card .list-group-item {
+
+        }
 
         .transaction-info {
             flex-grow: 1;
             padding-right: 15px;
         }
 
-
+    
         .transaction-actions {
-            text-align: left;
+            text-align: left; 
             min-width: 0;
             flex-shrink: 1;
-            margin-top: 15px;
-
-
+            margin-top: 15px; 
+            
+          
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 10px;
+            gap: 10px; 
         }
 
-
+      
         .transaction-actions .badge {
-            margin-bottom: 0;
+            margin-bottom: 0; 
             display: inline-block;
         }
 
 
         .transaction-actions .div-form-aceitar-negar {
-            flex-direction: row;
-            justify-content: flex-start;
+            flex-direction: row; 
+            justify-content: flex-start; 
             gap: 8px;
             margin-top: 0;
         }
@@ -299,31 +300,31 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
         .vote-info-container {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-top: 10px; 
         }
 
         .vote-info-box {
             border: 1px solid #4f545c;
             border-radius: 5px;
             padding: 8px 12px;
-            text-align: center;
-            min-width: 110px;
-            background-color: transparent;
+            text-align: center; 
+            min-width: 110px; 
+            background-color: transparent; 
         }
 
 
         .vote-number {
-            font-size: 1.25rem;
+            font-size: 1.25rem; 
             font-weight: bold;
-            color: var(--accent-color);
+            color: var(--accent-color); 
             line-height: 1.2;
         }
-
+        
 
         .vote-label {
-            font-size: 0.8rem;
+            font-size: 0.8rem; 
             color: #b7bcc4;
         }
 
@@ -337,6 +338,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 </head>
 
 <body class="service-details-page">
+
     <?php include 'assets/php/navbar.php'; ?>
 
     <main class="main">
@@ -460,24 +462,22 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                     </li>
                                 <?php else: ?>
                                     <?php foreach ($requisicoes as $req): ?>
-
-                                        <li class="list-group-item py-3">
-                                            <div class="transaction-info">
-
+                                        
+                                        <li class="list-group-item py-3"> <div class="transaction-info">
+                                                
                                                 <div class="fw-semibold">
                                                     <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?>
                                                     →
                                                     <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
                                                 </div>
-
+                                
                                                 <div class="request-meta mt-1">
                                                     <div><b>Aura:</b> <?php echo (int) ($req['quantidade'] ?? 0); ?></div>
-                                                    <div><b>Motivo:</b> <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?>
-                                                    </div>
+                                                    <div><b>Motivo:</b> <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?></div>
                                                 </div>
 
                                                 <div class="vote-info-container">
-
+                                                    
                                                     <div class="vote-info-box">
                                                         <div class="vote-number">
                                                             <?php
@@ -525,7 +525,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                     <?php else: ?>
                                                         <span class="badge bg-warning text-dark">Pendente</span>
                                                     <?php endif; ?>
-
+                                    
                                                     <?php
                                                     $sqlVotou = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
                                                     $stmtVotou = $conn->prepare($sqlVotou);
@@ -537,29 +537,24 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                     $rowVotou = $resVotou ? $resVotou->fetch_assoc() : null;
                                                     $votou = isset($rowVotou['votou']) ? (int) $rowVotou['votou'] : null;
 
-                                                    if (strtolower($req['status']) === 'pendente' && $votou === null) {
-                                                        ?>
-                                                        <div class="div-form-aceitar-negar">
+                                                    if (strtolower($req['status']) === 'pendente' && $votou === null) { 
+                                                    ?>
+                                                        <div class="div-form-aceitar-negar"> 
                                                             <form action="assets/php/aprovar.php" method="post" style="margin: 0;">
-                                                                <input type="hidden" name="idRequisicao"
-                                                                    value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
-                                                                <input type="hidden" name="idDestinatario"
-                                                                    value="<?php echo (int) ($req['idDestinatario'] ?? 0); ?>">
-                                                                <input type="hidden" name="idComunidade"
-                                                                    value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
+                                                                <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                                <input type="hidden" name="idDestinatario" value="<?php echo (int) ($req['idDestinatario'] ?? 0); ?>">
+                                                                <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
                                                                 <button class="btn btn-success btn-sm">Aprovar</button>
                                                             </form>
                                                             <form action="assets/php/negar.php" method="post" style="margin: 0;">
-                                                                <input type="hidden" name="idRequisicao"
-                                                                    value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
-                                                                <input type="hidden" name="idComunidade"
-                                                                    value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
+                                                                <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                                <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
                                                                 <button class="btn btn-outline-danger btn-sm">Negar</button>
                                                             </form>
                                                         </div>
                                                     <?php } ?>
                                                 </div>
-
+                                
                                                 <div class="transaction-footer d-flex justify-content-between">
                                                     <span>
                                                         <?php
@@ -574,14 +569,13 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                         ?>
                                                     </span>
                                                     <span>
-                                                        <b>Data:</b>
-                                                        <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
+                                                        <b>Data:</b> <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
                                                     </span>
                                                 </div>
                                             </div>
-
+                                
                                         </li>
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
                                 <?php endif; ?>
                             </ul>
                         </div>
@@ -633,7 +627,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/aos/aos.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js"></script> 
 
     <script>
         document.addEventListener('click', function (e) {
@@ -646,80 +640,6 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             if (idInput) idInput.value = uid;
             if (nameInput) nameInput.value = uname;
         });
-    </script>
-    <script>
-        async function iniciarNotificacoes() {
-            try {
-                console.log('[AuraBank] Dentro de iniciarNotificacoes().'); // LOG 4
-
-                // [NOVO] Criar Canal para Android
-                await PushNotifications.createChannel({
-                    id: 'votacoes_channel',
-                    name: 'Votações da Comunidade',
-                    description: 'Notificações para novas votações',
-                    importance: 5,
-                    vibration: true,
-                });
-                console.log('[AuraBank] Canal de notificação "votacoes_channel" criado/verificado.');
-
-                // 2. Pedir permissão
-                console.log('[AuraBank] Verificando permissões...'); // LOG 5
-                let permStatus = await PushNotifications.checkPermissions();
-                console.log('[AuraBank] Status inicial:', permStatus.receive); // LOG 6
-
-                if (permStatus.receive === 'prompt') {
-                    console.log('[AuraBank] Solicitando permissão...'); // LOG 7
-                    permStatus = await PushNotifications.requestPermissions();
-                    console.log('[AuraBank] Status após solicitar:', permStatus.receive); // LOG 8
-                }
-
-                if (permStatus.receive !== 'granted') {
-                    console.error('[AuraBank] Permissão de notificação negada!');
-                    return;
-                }
-                console.log('[AuraBank] Permissão CONCEDIDA.'); // LOG 9
-
-                // 
-                // <-- O BLOCO "registerActionTypes" FOI REMOVIDO DAQUI -->
-                // 
-
-                // 4. Registrar no Firebase
-                console.log('[AuraBank] Registrando no FCM...'); // LOG 12
-                await PushNotifications.register(); // AGORA ELE VAI CHEGAR AQUI!
-                console.log('[AuraBank] Registro no FCM solicitado.'); // LOG 13
-
-                // 5. Adicionar Ouvintes
-
-                // [CORRIGIDO] Ouvinte para o TOKEN
-                PushNotifications.addListener('registration', (token) => {
-                    console.log('[AuraBank] TOKEN RECEBIDO:', token.value); // LOG 14
-
-                    fetch('assets/php/salvar_token_push.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ token: token.value })
-                    })
-                        .then(response => response.text())
-                        .then(data => console.log('[AuraBank] Resposta do salvar_token:', data))
-                        .catch(err => console.error('[AuraBank] Erro ao salvar token:', err));
-                });
-
-                // Outros ouvintes
-                PushNotifications.addListener('registrationError', (error) => {
-                    console.error('[AuraBank] ERRO no registro FCM:', error);
-                });
-                PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
-                    console.log('[AuraBank] Ação da notificação:', action);
-                    window.location.href = 'minha_comunidade.php';
-                });
-                PushNotifications.addListener('pushNotificationReceived', (notification) => {
-                    console.log('[AuraBank] Notificação recebida com app aberto:', notification);
-                });
-
-            } catch (err) {
-                console.error('[AuraBank] ERRO GERAL no iniciarNotificacoes:', err);
-            }
-        }
     </script>
 </body>
 

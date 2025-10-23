@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">AuraBank</string>
-    <string name="title_activity_main">AuraBank</string>
-    <string name="package_name">com.aurabank.app</string>
-    <string name="custom_url_scheme">com.aurabank.app</string>
-</resources>
