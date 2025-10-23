@@ -647,31 +647,16 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         });
     </script>
     <script>
-    console.log('[AuraBank] Script de notificação DETECTADO no HTML.'); // LOG 1
-
-    window.addEventListener('DOMContentLoaded', (event) => {
-        console.log('[AuraBank] DOMContentLoaded disparado.'); // LOG 2
-
-        // 1. VERIFICAR SE ESTAMOS DENTRO DO APLICATIVO
-        if (typeof Capacitor === 'undefined' || !Capacitor.isNativePlatform || !Capacitor.isNativePlatform()) {
-            console.log('[AuraBank] Nenhuma plataforma Capacitor detectada (rodando em browser).'); // LOG 15
-            return; // Sai do script se não estiver no app
-        }
-        
-        console.log('[AuraBank] Plataforma nativa Capacitor DETECTADA.'); // LOG 3
-        
-        const { PushNotifications } = Capacitor.Plugins;
-
         async function iniciarNotificacoes() {
             try {
                 console.log('[AuraBank] Dentro de iniciarNotificacoes().'); // LOG 4
 
-                // [NOVO] Criar Canal para Android (Obrigatório para Android 8+)
+                // [NOVO] Criar Canal para Android
                 await PushNotifications.createChannel({
-                    id: 'votacoes_channel', // ID do Canal (anote isso!)
+                    id: 'votacoes_channel',
                     name: 'Votações da Comunidade',
                     description: 'Notificações para novas votações',
-                    importance: 5, // Máxima
+                    importance: 5,
                     vibration: true,
                 });
                 console.log('[AuraBank] Canal de notificação "votacoes_channel" criado/verificado.');
@@ -693,68 +678,48 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                 }
                 console.log('[AuraBank] Permissão CONCEDIDA.'); // LOG 9
 
-                // 3. Registrar botões (Seu código estava correto)
-                console.log('[AuraBank] Registrando tipos de ação...'); // LOG 10
-                await PushNotifications.registerActionTypes({
-                    types: [
-                        {
-                            id: 'VOTACAO_TRANSAO', // ID da Categoria da Ação
-                            actions: [
-                                { id: 'aprovar_voto', title: 'Aprovar' },
-                                { id: 'negar_voto', title: 'Negar', destructive: true }
-                            ]
-                        }
-                    ]
-                });
-                console.log('[AuraBank] Tipos de ação registrados.'); // LOG 11
+                // 
+                // <-- O BLOCO "registerActionTypes" FOI REMOVIDO DAQUI -->
+                // 
 
                 // 4. Registrar no Firebase
                 console.log('[AuraBank] Registrando no FCM...'); // LOG 12
-                await PushNotifications.register();
+                await PushNotifications.register(); // AGORA ELE VAI CHEGAR AQUI!
                 console.log('[AuraBank] Registro no FCM solicitado.'); // LOG 13
 
                 // 5. Adicionar Ouvintes
-                
+
                 // [CORRIGIDO] Ouvinte para o TOKEN
                 PushNotifications.addListener('registration', (token) => {
                     console.log('[AuraBank] TOKEN RECEBIDO:', token.value); // LOG 14
-                    
-                    // Envie o token para seu servidor
+
                     fetch('assets/php/salvar_token_push.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ token: token.value })
                     })
-                    .then(response => response.text())
-                    .then(data => console.log('[AuraBank] Resposta do salvar_token:', data))
-                    .catch(err => console.error('[AuraBank] Erro ao salvar token:', err));
+                        .then(response => response.text())
+                        .then(data => console.log('[AuraBank] Resposta do salvar_token:', data))
+                        .catch(err => console.error('[AuraBank] Erro ao salvar token:', err));
                 });
-                
-                // Outros ouvintes (Seu código estava correto)
+
+                // Outros ouvintes
                 PushNotifications.addListener('registrationError', (error) => {
                     console.error('[AuraBank] ERRO no registro FCM:', error);
                 });
                 PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
                     console.log('[AuraBank] Ação da notificação:', action);
-                    // Aqui você pode adicionar lógica para 'aprovar_voto' ou 'negar_voto'
-                    // Por agora, apenas redireciona
                     window.location.href = 'minha_comunidade.php';
                 });
                 PushNotifications.addListener('pushNotificationReceived', (notification) => {
                     console.log('[AuraBank] Notificação recebida com app aberto:', notification);
-                    // Opcional: mostrar um alerta customizado
-                    // alert(`Nova votação: ${notification.body}`);
                 });
 
             } catch (err) {
                 console.error('[AuraBank] ERRO GERAL no iniciarNotificacoes:', err);
             }
         }
-        
-        iniciarNotificacoes();
-
-    }); // Fim do DOMContentLoaded listener
-</script>
+    </script>
 </body>
 
 </html>
