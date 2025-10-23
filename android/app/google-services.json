@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443390159057",
+    "project_id": "aurabank-f8963",
+    "storage_bucket": "aurabank-f8963.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443390159057:android:ecc180b98549a9b5ac3df0",
+        "android_client_info": {
+          "package_name": "com.aurabank.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADGPG6elAVtWkRxejDxVhCva4y7FlNIGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

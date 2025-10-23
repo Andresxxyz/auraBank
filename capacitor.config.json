@@ -1,0 +1,9 @@
+{
+  "appId": "com.aurabank.app",
+  "appName": "AuraBank",
+  "webDir": "www",
+  "server": {
+    "url": "https://aurabank-dcf3eabkf8cdg3be.canadacentral-01.azurewebsites.net/",
+    "cleartext": true
+  }
+}

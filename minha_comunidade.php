@@ -124,7 +124,6 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
     <link href="assets/css/main.css" rel="stylesheet">
 
     <style>
-
         .main-content-card {
             background-color: #2c2f33;
             color: #f0f0f0;
@@ -260,39 +259,37 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
 
 
-        .requests-card .list-group-item {
-
-        }
+        .requests-card .list-group-item {}
 
         .transaction-info {
             flex-grow: 1;
             padding-right: 15px;
         }
 
-    
+
         .transaction-actions {
-            text-align: left; 
+            text-align: left;
             min-width: 0;
             flex-shrink: 1;
-            margin-top: 15px; 
-            
-          
+            margin-top: 15px;
+
+
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 10px; 
+            gap: 10px;
         }
 
-      
+
         .transaction-actions .badge {
-            margin-bottom: 0; 
+            margin-bottom: 0;
             display: inline-block;
         }
 
 
         .transaction-actions .div-form-aceitar-negar {
-            flex-direction: row; 
-            justify-content: flex-start; 
+            flex-direction: row;
+            justify-content: flex-start;
             gap: 8px;
             margin-top: 0;
         }
@@ -300,31 +297,31 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
         .vote-info-container {
             display: flex;
-            flex-wrap: wrap; 
-            gap: 10px; 
-            margin-top: 10px; 
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
         }
 
         .vote-info-box {
             border: 1px solid #4f545c;
             border-radius: 5px;
             padding: 8px 12px;
-            text-align: center; 
-            min-width: 110px; 
-            background-color: transparent; 
+            text-align: center;
+            min-width: 110px;
+            background-color: transparent;
         }
 
 
         .vote-number {
-            font-size: 1.25rem; 
+            font-size: 1.25rem;
             font-weight: bold;
-            color: var(--accent-color); 
+            color: var(--accent-color);
             line-height: 1.2;
         }
-        
+
 
         .vote-label {
-            font-size: 0.8rem; 
+            font-size: 0.8rem;
             color: #b7bcc4;
         }
 
@@ -462,22 +459,24 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                     </li>
                                 <?php else: ?>
                                     <?php foreach ($requisicoes as $req): ?>
-                                        
-                                        <li class="list-group-item py-3"> <div class="transaction-info">
-                                                
+
+                                        <li class="list-group-item py-3">
+                                            <div class="transaction-info">
+
                                                 <div class="fw-semibold">
                                                     <?php echo htmlspecialchars($req['remetenteNome'] ?? 'Usuário'); ?>
                                                     →
                                                     <?php echo htmlspecialchars($req['destinatarioNome'] ?? 'Usuário'); ?>
                                                 </div>
-                                
+
                                                 <div class="request-meta mt-1">
                                                     <div><b>Aura:</b> <?php echo (int) ($req['quantidade'] ?? 0); ?></div>
-                                                    <div><b>Motivo:</b> <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?></div>
+                                                    <div><b>Motivo:</b> <?php echo htmlspecialchars($req['motivo'] ?? '...'); ?>
+                                                    </div>
                                                 </div>
 
                                                 <div class="vote-info-container">
-                                                    
+
                                                     <div class="vote-info-box">
                                                         <div class="vote-number">
                                                             <?php
@@ -525,7 +524,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                     <?php else: ?>
                                                         <span class="badge bg-warning text-dark">Pendente</span>
                                                     <?php endif; ?>
-                                    
+
                                                     <?php
                                                     $sqlVotou = "SELECT votou FROM requisicaousuario WHERE idRequisicao = ? AND idUsuario = ? LIMIT 1";
                                                     $stmtVotou = $conn->prepare($sqlVotou);
@@ -537,24 +536,29 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                     $rowVotou = $resVotou ? $resVotou->fetch_assoc() : null;
                                                     $votou = isset($rowVotou['votou']) ? (int) $rowVotou['votou'] : null;
 
-                                                    if (strtolower($req['status']) === 'pendente' && $votou === null) { 
-                                                    ?>
-                                                        <div class="div-form-aceitar-negar"> 
+                                                    if (strtolower($req['status']) === 'pendente' && $votou === null) {
+                                                        ?>
+                                                        <div class="div-form-aceitar-negar">
                                                             <form action="assets/php/aprovar.php" method="post" style="margin: 0;">
-                                                                <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
-                                                                <input type="hidden" name="idDestinatario" value="<?php echo (int) ($req['idDestinatario'] ?? 0); ?>">
-                                                                <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
+                                                                <input type="hidden" name="idRequisicao"
+                                                                    value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                                <input type="hidden" name="idDestinatario"
+                                                                    value="<?php echo (int) ($req['idDestinatario'] ?? 0); ?>">
+                                                                <input type="hidden" name="idComunidade"
+                                                                    value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
                                                                 <button class="btn btn-success btn-sm">Aprovar</button>
                                                             </form>
                                                             <form action="assets/php/negar.php" method="post" style="margin: 0;">
-                                                                <input type="hidden" name="idRequisicao" value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
-                                                                <input type="hidden" name="idComunidade" value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
+                                                                <input type="hidden" name="idRequisicao"
+                                                                    value="<?php echo (int) ($req['idRequisicao'] ?? 0); ?>">
+                                                                <input type="hidden" name="idComunidade"
+                                                                    value="<?php echo (int) ($comunidade['idComunidade'] ?? 0); ?>">
                                                                 <button class="btn btn-outline-danger btn-sm">Negar</button>
                                                             </form>
                                                         </div>
                                                     <?php } ?>
                                                 </div>
-                                
+
                                                 <div class="transaction-footer d-flex justify-content-between">
                                                     <span>
                                                         <?php
@@ -569,13 +573,14 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                                                         ?>
                                                     </span>
                                                     <span>
-                                                        <b>Data:</b> <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
+                                                        <b>Data:</b>
+                                                        <?php echo htmlspecialchars(date('d/m/Y', strtotime($req['dtCriacao']))); ?>
                                                     </span>
                                                 </div>
                                             </div>
-                                
+
                                         </li>
-                                        <?php endforeach; ?>
+                                    <?php endforeach; ?>
                                 <?php endif; ?>
                             </ul>
                         </div>
@@ -627,7 +632,7 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/aos/aos.js"></script>
-    <script src="assets/js/main.js"></script> 
+    <script src="assets/js/main.js"></script>
 
     <script>
         document.addEventListener('click', function (e) {
@@ -640,6 +645,80 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             if (idInput) idInput.value = uid;
             if (nameInput) nameInput.value = uname;
         });
+    </script>
+    <script>
+        // Só executa se estivermos dentro do app Capacitor
+        if (typeof capacitor !== 'undefined' && capacitor.isNativePlatform()) {
+
+            const { PushNotifications } = capacitor.Plugins;
+
+            // Função principal para iniciar tudo
+            async function iniciarNotificacoes() {
+                console.log('Iniciando sistema de notificações...');
+
+                // 1. Pedir permissão ao usuário
+                let permStatus = await PushNotifications.checkPermissions();
+                if (permStatus.receive === 'prompt') {
+                    permStatus = await PushNotifications.requestPermissions();
+                }
+                if (permStatus.receive !== 'granted') {
+                    console.error('Permissão de notificação negada!');
+                    return;
+                }
+
+                // 2. Registrar os botões de ação (Aprovar/Negar)
+                await PushNotifications.registerActionTypes({
+                    types: [
+                        {
+                            id: 'VOTACAO_TRANSAO', // ID do tipo de notificação
+                            actions: [
+                                { id: 'aprovar_voto', title: 'Aprovar' },
+                                { id: 'negar_voto', title: 'Negar', destructive: true }
+                            ]
+                        }
+                    ]
+                });
+
+                // 3. Registrar o dispositivo no Firebase
+                await PushNotifications.register();
+
+                // 4. Ouvinte: Pegar o token e salvar no BD
+                PushNotifications.addListener('registration', (token) => {
+                    console.log('Token do dispositivo:', token.value);
+
+                    // Envia o token para seu novo script PHP
+                    fetch('assets/php/salvar_token_push.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token: token.value })
+                    })
+                        .then(res => res.json())
+                        .then(data => console.log('Token salvo:', data))
+                        .catch(err => console.error('Erro ao salvar token:', err));
+                });
+
+                // 5. Ouvinte: Lida com a resposta do usuário
+                PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+                    console.log('Ação da notificação:', action);
+                    const acaoID = action.actionId;
+                    const votacaoId = action.notification.data.votacaoId;
+
+                    if (!votacaoId) return;
+
+                    // Define a ação (aprovar ou negar)
+                    let voto = (acaoID === 'aprovar_voto') ? 'aprovar' : 'negar';
+
+                    // Envia o voto para um script PHP
+                    // (Você precisará criar este script 'registrar_voto.php')
+                    // fetch(`assets/php/registrar_voto.php?id=${votacaoId}&voto=${voto}`);
+
+                    // Por enquanto, vamos apenas redirecionar para a comunidade
+                    window.location.href = 'minha_comunidade.php';
+                });
+            }
+
+            iniciarNotificacoes();
+        }
     </script>
 </body>
 

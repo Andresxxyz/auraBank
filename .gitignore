@@ -5,3 +5,25 @@ debug.log
 
 # Arquivos de ambiente
 .env
+
+# Dependências do Node (Corrige o erro "Filename too long")
+node_modules/
+
+# Dependências do PHP (Composer)
+vendor/
+
+# Arquivos de Build do Android (Desnecessários)
+android/build/
+android/app/build/
+*.apk
+
+# ----------------------------------------------------
+# !!!! A REGRA MAIS IMPORTANTE !!!!
+# Ignora sua chave secreta do Firebase
+assets/php/firebase-admin.json
+assets/php/firebase-admin.json.json
+# ----------------------------------------------------
+
+# Arquivos de sistema do Windows/macOS
+.DS_Store
+Thumbs.db
