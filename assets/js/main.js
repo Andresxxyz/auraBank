@@ -6,6 +6,8 @@
 * License: https://bootstrapmade.com/license/
 */
 
+console.log('beginning of main'); // Keep this log
+
 (function () {
   "use strict";
 
@@ -15,7 +17,8 @@
   function toggleScrolled() {
     const selectBody = document.querySelector('body');
     const selectHeader = document.querySelector('#header');
-    if (!selectHeader.classList.contains('scroll-up-sticky') && !selectHeader.classList.contains('sticky-top') && !selectHeader.classList.contains('fixed-top')) return;
+    // CORRECTION: Check if selectHeader exists
+    if (!selectHeader || (!selectHeader.classList.contains('scroll-up-sticky') && !selectHeader.classList.contains('sticky-top') && !selectHeader.classList.contains('fixed-top'))) return; 
     window.scrollY > 100 ? selectBody.classList.add('scrolled') : selectBody.classList.remove('scrolled');
   }
 
@@ -32,7 +35,10 @@
     mobileNavToggleBtn.classList.toggle('bi-list');
     mobileNavToggleBtn.classList.toggle('bi-x');
   }
-  mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
+  // CORRECTION: Check if mobileNavToggleBtn exists
+  if (mobileNavToggleBtn) {
+    mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
+  }
 
   /**
    * Hide mobile nav on same-page/hash links
@@ -43,7 +49,6 @@
         mobileNavToogle();
       }
     });
-
   });
 
   /**
@@ -52,9 +57,12 @@
   document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
     navmenu.addEventListener('click', function (e) {
       e.preventDefault();
-      this.parentNode.classList.toggle('active');
-      this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
-      e.stopImmediatePropagation();
+      // CORRECTION: Check if parentNode and nextElementSibling exist
+      if (this.parentNode && this.parentNode.nextElementSibling) {
+        this.parentNode.classList.toggle('active');
+        this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
+        e.stopImmediatePropagation();
+      }
     });
   });
 
@@ -78,13 +86,16 @@
       window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
     }
   }
-  scrollTop.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+  // CORRECTION: Check if scrollTop exists before adding listener
+  if (scrollTop) { 
+    scrollTop.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     });
-  });
+  }
 
   window.addEventListener('load', toggleScrollTop);
   document.addEventListener('scroll', toggleScrollTop);
@@ -93,67 +104,107 @@
    * Animation on scroll function and init
    */
   function aosInit() {
-    AOS.init({
-      duration: 600,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
-    });
+    // CORRECTION: Check if AOS is defined
+    if (typeof AOS !== 'undefined') { 
+      AOS.init({
+        duration: 600,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+      });
+    }
   }
   window.addEventListener('load', aosInit);
 
   /**
    * Initiate glightbox
    */
-  const glightbox = GLightbox({
-    selector: '.glightbox'
-  });
+  // CORRECTION: Check if GLightbox is defined
+  if (typeof GLightbox !== 'undefined') {
+    const glightbox = GLightbox({
+      selector: '.glightbox'
+    });
+  }
 
   /**
    * Initiate Pure Counter
    */
-  new PureCounter();
+  // CORRECTION: Check if PureCounter is defined
+  if (typeof PureCounter !== 'undefined') {
+    new PureCounter();
+  }
 
   /**
    * Init swiper sliders
    */
   function initSwiper() {
     document.querySelectorAll(".init-swiper").forEach(function (swiperElement) {
-      let config = JSON.parse(
-        swiperElement.querySelector(".swiper-config").innerHTML.trim()
-      );
+      // CORRECTION: Check if Swiper is defined
+      if (typeof Swiper === 'undefined') return; 
+
+      let configEl = swiperElement.querySelector(".swiper-config");
+      // CORRECTION: Check if config element exists
+      if (!configEl) return; 
+      
+      let config = {};
+      try {
+           config = JSON.parse(configEl.innerHTML.trim());
+      } catch (e) {
+          console.error("Could not parse swiper config", e);
+          return; // Skip if config is invalid
+      }
+
 
       if (swiperElement.classList.contains("swiper-tab")) {
-        initSwiperWithCustomPagination(swiperElement, config);
+        // Assuming initSwiperWithCustomPagination is defined elsewhere
+        if (typeof initSwiperWithCustomPagination === 'function') {
+           initSwiperWithCustomPagination(swiperElement, config);
+        }
       } else {
         new Swiper(swiperElement, config);
       }
     });
   }
-
   window.addEventListener("load", initSwiper);
+
 
   /**
    * Init isotope layout and filters
    */
   document.querySelectorAll('.isotope-layout').forEach(function (isotopeItem) {
+    // CORRECTION: Check if Isotope and imagesLoaded are defined
+    if (typeof Isotope === 'undefined' || typeof imagesLoaded === 'undefined') return;
+
     let layout = isotopeItem.getAttribute('data-layout') ?? 'masonry';
     let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
     let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
+    let container = isotopeItem.querySelector('.isotope-container');
+
+    // CORRECTION: Check if container exists
+    if (!container) return; 
 
     let initIsotope;
-    imagesLoaded(isotopeItem.querySelector('.isotope-container'), function () {
-      initIsotope = new Isotope(isotopeItem.querySelector('.isotope-container'), {
-        itemSelector: '.isotope-item',
-        layoutMode: layout,
-        filter: filter,
-        sortBy: sort
-      });
+    imagesLoaded(container, function () {
+      try { // Add try-catch for safety
+          initIsotope = new Isotope(container, {
+            itemSelector: '.isotope-item',
+            layoutMode: layout,
+            filter: filter,
+            sortBy: sort
+          });
+      } catch(e) {
+          console.error("Isotope initialization failed", e);
+      }
     });
 
     isotopeItem.querySelectorAll('.isotope-filters li').forEach(function (filters) {
       filters.addEventListener('click', function () {
-        isotopeItem.querySelector('.isotope-filters .filter-active').classList.remove('filter-active');
+        // CORRECTION: Check if initIsotope was successfully created
+        if (!initIsotope) return; 
+
+        let activeFilter = isotopeItem.querySelector('.isotope-filters .filter-active');
+        if (activeFilter) activeFilter.classList.remove('filter-active');
+        
         this.classList.add('filter-active');
         initIsotope.arrange({
           filter: this.getAttribute('data-filter')
@@ -171,14 +222,19 @@
    */
   window.addEventListener('load', function (e) {
     if (window.location.hash) {
-      if (document.querySelector(window.location.hash)) {
+      let section = document.querySelector(window.location.hash);
+      // CORRECTION: Check if section exists
+      if (section) {
         setTimeout(() => {
-          let section = document.querySelector(window.location.hash);
-          let scrollMarginTop = getComputedStyle(section).scrollMarginTop;
-          window.scrollTo({
-            top: section.offsetTop - parseInt(scrollMarginTop),
-            behavior: 'smooth'
-          });
+          try { // Add try-catch for safety
+              let scrollMarginTop = getComputedStyle(section).scrollMarginTop;
+              window.scrollTo({
+                top: section.offsetTop - parseInt(scrollMarginTop || '0', 10), // Add fallback for parseInt
+                behavior: 'smooth'
+              });
+          } catch (e) {
+             console.error("Error scrolling to hash", e);
+          }
         }, 100);
       }
     }
@@ -206,25 +262,39 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
-})();
-
-//script para exibir o popup
+  // This is the code that was likely causing the error at line 216 or similar
+  // It tries to find elements that might not exist on every page.
+  // We need to check if these elements exist before adding listeners.
 
   let popup = document.querySelector("#btn-pop-up-add-aura");
   let divpopup = document.querySelector(".pop-up-add-aura");
   let divtable = document.querySelector(".tabela-aura");
-  popup.addEventListener("click", function (event) {
-    
-    divpopup.classList.toggle("active");
-    divpopup.style.display = "flex";
-    divtable.style.display = "none";
-    
-  });
+  
+  // CORRECTION: Check if all elements exist before adding listener
+  if (popup && divpopup && divtable) { 
+      popup.addEventListener("click", function (event) {
+        divpopup.classList.toggle("active");
+        // Use inline style or toggle a class for display
+        divpopup.style.display = divpopup.classList.contains("active") ? "flex" : "none"; 
+        divtable.style.display = divpopup.classList.contains("active") ? "none" : "table"; // Or block, depending on original style
+      });
+  } else {
+      console.warn("Popup elements (#btn-pop-up-add-aura, .pop-up-add-aura, .tabela-aura) not found on this page.");
+  }
+
 
   //script para fechar o popup (cancel)
   let popupcancel = document.querySelector("#botao-cancel");
-  popupcancel.addEventListener("click", function (event) {
-    divpopup.classList.remove("active");
-    divpopup.style.display = "none";
-    divtable.style.display = "table";
-  });
+  
+  // CORRECTION: Check if elements exist before adding listener
+  if (popupcancel && divpopup && divtable) { 
+      popupcancel.addEventListener("click", function (event) {
+        divpopup.classList.remove("active");
+        divpopup.style.display = "none";
+        divtable.style.display = "table"; // Or block
+      });
+  } else {
+      console.warn("Popup cancel button (#botao-cancel) not found on this page.");
+  }
+
+})(); 
