@@ -660,9 +660,10 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
                 // 1. VERIFICAR SE ESTAMOS DENTRO DO APLICATIVO
                 if (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform && Capacitor.isNativePlatform()) {
 
+
                     console.log('[AuraBank] Plataforma nativa Capacitor DETECTADA após Timeout.'); // LOG 3
 
-                    const { PushNotifications } = capacitor.Plugins;
+                    const { PushNotifications } = Capacitor.Plugins;
 
                     async function iniciarNotificacoes() {
                         // ... (O resto da função iniciarNotificacoes é EXATAMENTE IGUAL ao anterior)
@@ -738,10 +739,10 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
 
                 } else {
                     console.log('[AuraBank] Nenhuma plataforma Capacitor detectada (rodando em browser) após Timeout.'); // LOG 15
-                    if (typeof capacitor === 'undefined') {
+                    if (typeof Capacitor === 'undefined') {
                         console.log('[AuraBank] Objeto capacitor ainda é undefined após Timeout.'); // LOG 16
                     } else {
-                        console.log('[AuraBank] capacitor.isNativePlatform:', capacitor.isNativePlatform);
+                        console.log('[AuraBank] capacitor.isNativePlatform:', Capacitor.isNativePlatform);
                     }
                 }
             }, 500); // Espera 500 milissegundos
