@@ -646,78 +646,101 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
             if (nameInput) nameInput.value = uname;
         });
     </script>
+    <!-- Coloque isso ANTES de fechar o </body> em minha_comunidade.php -->
     <script>
-        // Só executa se estivermos dentro do app Capacitor
-        if (typeof capacitor !== 'undefined' && capacitor.isNativePlatform()) {
+        console.log('[AuraBank] Script de notificação INICIADO.'); // LOG 1
 
+        // 1. VERIFICAR SE ESTAMOS DENTRO DO APLICATIVO
+        if (typeof capacitor !== 'undefined' && capacitor.isNativePlatform && capacitor.isNativePlatform()) {
+
+            console.log('[AuraBank] Plataforma nativa Capacitor DETECTADA.'); // LOG 2
+
+            // Pega o plugin de Notificações DEPOIS de verificar
             const { PushNotifications } = capacitor.Plugins;
 
             // Função principal para iniciar tudo
             async function iniciarNotificacoes() {
-                console.log('Iniciando sistema de notificações...');
+                try {
+                    console.log('[AuraBank] Dentro de iniciarNotificacoes().'); // LOG 3
 
-                // 1. Pedir permissão ao usuário
-                let permStatus = await PushNotifications.checkPermissions();
-                if (permStatus.receive === 'prompt') {
-                    permStatus = await PushNotifications.requestPermissions();
+                    // 2. Pedir permissão ao usuário
+                    console.log('[AuraBank] Verificando permissões...'); // LOG 4
+                    let permStatus = await PushNotifications.checkPermissions();
+                    console.log('[AuraBank] Status inicial:', permStatus.receive); // LOG 5
+
+                    if (permStatus.receive === 'prompt') {
+                        console.log('[AuraBank] Solicitando permissão...'); // LOG 6
+                        permStatus = await PushNotifications.requestPermissions();
+                        console.log('[AuraBank] Status após solicitar:', permStatus.receive); // LOG 7
+                    }
+
+                    if (permStatus.receive !== 'granted') {
+                        console.error('[AuraBank] Permissão de notificação negada!');
+                        return; // Sai se não tiver permissão
+                    }
+                    console.log('[AuraBank] Permissão CONCEDIDA.'); // LOG 8
+
+                    // 3. Registrar os botões de ação (Aprovar/Negar)
+                    console.log('[AuraBank] Registrando tipos de ação...'); // LOG 9
+                    await PushNotifications.registerActionTypes({
+                        types: [
+                            {
+                                id: 'VOTACAO_TRANSAO',
+                                actions: [
+                                    { id: 'aprovar_voto', title: 'Aprovar' },
+                                    { id: 'negar_voto', title: 'Negar', destructive: true }
+                                ]
+                            }
+                        ]
+                    });
+                    console.log('[AuraBank] Tipos de ação registrados.'); // LOG 10
+
+                    // 4. Registrar o dispositivo no Firebase
+                    console.log('[AuraBank] Registrando no FCM...'); // LOG 11
+                    await PushNotifications.register();
+                    console.log('[AuraBank] Registro no FCM solicitado.'); // LOG 12 (Não garante sucesso ainda)
+
+                    // 5. Adicionar "Ouvintes" (Listeners) - Estes ficam esperando
+
+                    PushNotifications.addListener('registration', (token) => {
+                        console.log('[AuraBank] TOKEN RECEBIDO:', token.value); // LOG 13
+                        fetch('assets/php/salvar_token_push.php', { /* ... seu código fetch ... */ })
+                            .then(res => res.json())
+                            .then(data => console.log('[AuraBank] Token salvo:', data))
+                            .catch(err => console.error('[AuraBank] Erro ao salvar token:', err));
+                    });
+
+                    PushNotifications.addListener('registrationError', (error) => {
+                        console.error('[AuraBank] ERRO no registro FCM:', error); // LOG DE ERRO IMPORTANTE
+                    });
+
+                    PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+                        console.log('[AuraBank] Ação da notificação:', action);
+                        // ... seu código para lidar com a ação ...
+                        window.location.href = 'minha_comunidade.php';
+                    });
+
+                    PushNotifications.addListener('pushNotificationReceived', (notification) => {
+                        console.log('[AuraBank] Notificação recebida com app aberto:', notification);
+                        alert(`Nova votação: ${notification.body}`);
+                    });
+
+                } catch (err) {
+                    console.error('[AuraBank] ERRO GERAL no iniciarNotificacoes:', err); // LOG DE ERRO GERAL
                 }
-                if (permStatus.receive !== 'granted') {
-                    console.error('Permissão de notificação negada!');
-                    return;
-                }
-
-                // 2. Registrar os botões de ação (Aprovar/Negar)
-                await PushNotifications.registerActionTypes({
-                    types: [
-                        {
-                            id: 'VOTACAO_TRANSAO', // ID do tipo de notificação
-                            actions: [
-                                { id: 'aprovar_voto', title: 'Aprovar' },
-                                { id: 'negar_voto', title: 'Negar', destructive: true }
-                            ]
-                        }
-                    ]
-                });
-
-                // 3. Registrar o dispositivo no Firebase
-                await PushNotifications.register();
-
-                // 4. Ouvinte: Pegar o token e salvar no BD
-                PushNotifications.addListener('registration', (token) => {
-                    console.log('Token do dispositivo:', token.value);
-
-                    // Envia o token para seu novo script PHP
-                    fetch('assets/php/salvar_token_push.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ token: token.value })
-                    })
-                        .then(res => res.json())
-                        .then(data => console.log('Token salvo:', data))
-                        .catch(err => console.error('Erro ao salvar token:', err));
-                });
-
-                // 5. Ouvinte: Lida com a resposta do usuário
-                PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
-                    console.log('Ação da notificação:', action);
-                    const acaoID = action.actionId;
-                    const votacaoId = action.notification.data.votacaoId;
-
-                    if (!votacaoId) return;
-
-                    // Define a ação (aprovar ou negar)
-                    let voto = (acaoID === 'aprovar_voto') ? 'aprovar' : 'negar';
-
-                    // Envia o voto para um script PHP
-                    // (Você precisará criar este script 'registrar_voto.php')
-                    // fetch(`assets/php/registrar_voto.php?id=${votacaoId}&voto=${voto}`);
-
-                    // Por enquanto, vamos apenas redirecionar para a comunidade
-                    window.location.href = 'minha_comunidade.php';
-                });
             }
 
+            // Chame a função principal
             iniciarNotificacoes();
+
+        } else {
+            // Se entramos aqui, ou 'capacitor' não existe, ou isNativePlatform falhou
+            console.log('[AuraBank] Nenhuma plataforma Capacitor detectada ou isNativePlatform() é falso.'); // LOG 14
+            if (typeof capacitor === 'undefined') {
+                console.log('[AuraBank] Objeto capacitor é undefined.');
+            } else {
+                console.log('[AuraBank] capacitor.isNativePlatform:', capacitor.isNativePlatform);
+            }
         }
     </script>
 </body>
