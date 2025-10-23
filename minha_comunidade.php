@@ -646,86 +646,102 @@ $members = carregarMembros($conn, $comunidade['idComunidade'] ?? 0);
         });
     </script>
     <!-- Coloque isto ANTES de fechar o </body> em minha_comunidade.php -->
+    <!-- Coloque isto ANTES de fechar o </body> em minha_comunidade.php -->
     <script>
         console.log('[AuraBank] Script de notificação DETECTADO no HTML.'); // LOG 1
 
-        // ESPERA que o HTML esteja pronto antes de tentar fazer qualquer coisa
         window.addEventListener('DOMContentLoaded', (event) => {
             console.log('[AuraBank] DOMContentLoaded disparado.'); // LOG 2
 
-            // 1. VERIFICAR SE ESTAMOS DENTRO DO APLICATIVO
-            //    Verificamos de novo aqui, pois agora o Capacitor já DEVE ter sido injectado
-            if (typeof capacitor !== 'undefined' && capacitor.isNativePlatform && capacitor.isNativePlatform()) {
+            // ESPERA 500ms ADICIONAIS após o DOM estar pronto
+            setTimeout(() => {
+                console.log('[AuraBank] Timeout de 500ms concluído.'); // LOG 2.5
 
-                console.log('[AuraBank] Plataforma nativa Capacitor DETECTADA após DOMContentLoaded.'); // LOG 3
+                // 1. VERIFICAR SE ESTAMOS DENTRO DO APLICATIVO
+                if (typeof capacitor !== 'undefined' && capacitor.isNativePlatform && capacitor.isNativePlatform()) {
 
-                const { PushNotifications } = capacitor.Plugins;
+                    console.log('[AuraBank] Plataforma nativa Capacitor DETECTADA após Timeout.'); // LOG 3
 
-                async function iniciarNotificacoes() {
-                    try {
-                        console.log('[AuraBank] Dentro de iniciarNotificacoes().'); // LOG 4
+                    const { PushNotifications } = capacitor.Plugins;
 
-                        // 2. Pedir permissão
-                        console.log('[AuraBank] Verificando permissões...'); // LOG 5
-                        let permStatus = await PushNotifications.checkPermissions();
-                        console.log('[AuraBank] Status inicial:', permStatus.receive); // LOG 6
+                    async function iniciarNotificacoes() {
+                        // ... (O resto da função iniciarNotificacoes é EXATAMENTE IGUAL ao anterior)
+                        try {
+                            console.log('[AuraBank] Dentro de iniciarNotificacoes().'); // LOG 4
 
-                        if (permStatus.receive === 'prompt') {
-                            console.log('[AuraBank] Solicitando permissão...'); // LOG 7
-                            permStatus = await PushNotifications.requestPermissions();
-                            console.log('[AuraBank] Status após solicitar:', permStatus.receive); // LOG 8
-                        }
+                            // 2. Pedir permissão
+                            console.log('[AuraBank] Verificando permissões...'); // LOG 5
+                            let permStatus = await PushNotifications.checkPermissions();
+                            console.log('[AuraBank] Status inicial:', permStatus.receive); // LOG 6
 
-                        if (permStatus.receive !== 'granted') {
-                            console.error('[AuraBank] Permissão de notificação negada!');
-                            return;
-                        }
-                        console.log('[AuraBank] Permissão CONCEDIDA.'); // LOG 9
+                            if (permStatus.receive === 'prompt') {
+                                console.log('[AuraBank] Solicitando permissão...'); // LOG 7
+                                permStatus = await PushNotifications.requestPermissions();
+                                console.log('[AuraBank] Status após solicitar:', permStatus.receive); // LOG 8
+                            }
 
-                        // 3. Registrar botões
-                        console.log('[AuraBank] Registrando tipos de ação...'); // LOG 10
-                        await PushNotifications.registerActionTypes({ /* ... tipos de ação ... */ });
-                        console.log('[AuraBank] Tipos de ação registrados.'); // LOG 11
+                            if (permStatus.receive !== 'granted') {
+                                console.error('[AuraBank] Permissão de notificação negada!');
+                                return;
+                            }
+                            console.log('[AuraBank] Permissão CONCEDIDA.'); // LOG 9
 
-                        // 4. Registrar no Firebase
-                        console.log('[AuraBank] Registrando no FCM...'); // LOG 12
-                        await PushNotifications.register();
-                        console.log('[AuraBank] Registro no FCM solicitado.'); // LOG 13
+                            // 3. Registrar botões
+                            console.log('[AuraBank] Registrando tipos de ação...'); // LOG 10
+                            await PushNotifications.registerActionTypes({
+                                types: [
+                                    {
+                                        id: 'VOTACAO_TRANSAO',
+                                        actions: [
+                                            { id: 'aprovar_voto', title: 'Aprovar' },
+                                            { id: 'negar_voto', title: 'Negar', destructive: true }
+                                        ]
+                                    }
+                                ]
+                            });
+                            console.log('[AuraBank] Tipos de ação registrados.'); // LOG 11
 
-                        // 5. Adicionar Ouvintes
-                        PushNotifications.addListener('registration', (token) => {
-                            console.log('[AuraBank] TOKEN RECEBIDO:', token.value); // LOG 14
-                            fetch('assets/php/salvar_token_push.php', { /* ... */ })
+                            // 4. Registrar no Firebase
+                            console.log('[AuraBank] Registrando no FCM...'); // LOG 12
+                            await PushNotifications.register();
+                            console.log('[AuraBank] Registro no FCM solicitado.'); // LOG 13
+
+                            // 5. Adicionar Ouvintes
+                            PushNotifications.addListener('registration', (token) => {
+                                console.log('[AuraBank] TOKEN RECEBIDO:', token.value); // LOG 14
+                                fetch('assets/php/salvar_token_push.php', { /* ... */ })
+                                    // ...
+                                    .catch(err => console.error('[AuraBank] Erro ao salvar token:', err));
+                            });
+                            PushNotifications.addListener('registrationError', (error) => {
+                                console.error('[AuraBank] ERRO no registro FCM:', error);
+                            });
+                            PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+                                console.log('[AuraBank] Ação da notificação:', action);
                                 // ...
-                                .catch(err => console.error('[AuraBank] Erro ao salvar token:', err));
-                        });
-                        PushNotifications.addListener('registrationError', (error) => {
-                            console.error('[AuraBank] ERRO no registro FCM:', error);
-                        });
-                        PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
-                            console.log('[AuraBank] Ação da notificação:', action);
-                            // ...
-                            window.location.href = 'minha_comunidade.php';
-                        });
-                        PushNotifications.addListener('pushNotificationReceived', (notification) => {
-                            console.log('[AuraBank] Notificação recebida com app aberto:', notification);
-                            alert(`Nova votação: ${notification.body}`);
-                        });
+                                window.location.href = 'minha_comunidade.php';
+                            });
+                            PushNotifications.addListener('pushNotificationReceived', (notification) => {
+                                console.log('[AuraBank] Notificação recebida com app aberto:', notification);
+                                alert(`Nova votação: ${notification.body}`);
+                            });
 
-                    } catch (err) {
-                        console.error('[AuraBank] ERRO GERAL no iniciarNotificacoes:', err);
+                        } catch (err) {
+                            console.error('[AuraBank] ERRO GERAL no iniciarNotificacoes:', err);
+                        }
+                    }
+                    iniciarNotificacoes();
+
+                } else {
+                    console.log('[AuraBank] Nenhuma plataforma Capacitor detectada (rodando em browser) após Timeout.'); // LOG 15
+                    if (typeof capacitor === 'undefined') {
+                        console.log('[AuraBank] Objeto capacitor ainda é undefined após Timeout.'); // LOG 16
+                    } else {
+                        console.log('[AuraBank] capacitor.isNativePlatform:', capacitor.isNativePlatform);
                     }
                 }
-                iniciarNotificacoes();
+            }, 500); // Espera 500 milissegundos
 
-            } else {
-                console.log('[AuraBank] Nenhuma plataforma Capacitor detectada (rodando em browser) após DOMContentLoaded.'); // LOG 15
-                if (typeof capacitor === 'undefined') {
-                    console.log('[AuraBank] Objeto capacitor ainda é undefined.');
-                } else {
-                    console.log('[AuraBank] capacitor.isNativePlatform:', capacitor.isNativePlatform);
-                }
-            }
         }); // Fim do DOMContentLoaded listener
     </script>
 </body>
