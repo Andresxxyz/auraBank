@@ -7,101 +7,98 @@
 */
 
 
-// Coloque este JS para rodar assim que seu site carregar
+// Coloque este JS para rodar assim que seu site carregar (no seu main.js ou rodape.php)
 
-// Função principal para iniciar tudo
-async function iniciarNotificacoes() {
-  console.log('Iniciando sistema de notificações...');
-  
-  // 1. Pedir permissão ao usuário
-  let permStatus = await PushNotifications.checkPermissions();
-  if (permStatus.receive === 'prompt') {
-    permStatus = await PushNotifications.requestPermissions();
-  }
-  if (permStatus.receive !== 'granted') {
-    console.error('Permissão de notificação negada!');
-    return;
-  }
-
-  // 2. Registrar os botões de ação (Aprovar/Negar)
-  await PushNotifications.registerActionTypes({
-    types: [
-      {
-        // ID único para este TIPO de notificação
-        id: 'VOTACAO_TRANSAO', 
-        actions: [
-          {
-            id: 'aprovar_voto', // ID da ação
-            title: 'Aprovar',
-            // Opcional: destructive: false (para cor normal)
-          },
-          {
-            id: 'negar_voto', // ID da ação
-            title: 'Negar',
-            destructive: true // Marca como ação destrutiva (vermelho)
-          }
-        ]
-      }
-    ]
-  });
-
-  // 3. Registrar o dispositivo no Firebase para receber notificações
-  await PushNotifications.register();
-  
-  // 4. Adicionar "Ouvintes" (Listeners)
-  
-  // Ouvinte: Disparado quando o token do dispositivo é gerado
-  PushNotifications.addListener('registration', (token) => {
-    console.log('Token do dispositivo:', token.value);
+// 1. VERIFICAR SE ESTAMOS DENTRO DO APLICATIVO
+if (typeof capacitor !== 'undefined' && capacitor.isNativePlatform()) {
     
-    // !!! MUITO IMPORTANTE !!!
-    // Envie este 'token.value' para seu servidor PHP e salve no
-    // banco de dados junto com o ID do usuário.
-    // Ex: 
-    // fetch('/api/salvar_token_push.php', {
-    //   method: 'POST',
-    //   headers: {'Content-Type': 'application/json'},
-    //   body: JSON.stringify({ token: token.value })
-    // });
-  });
+    // Se entramos aqui, significa que o código está rodando 
+    // dentro do seu APK e o objeto 'capacitor' existe.
+    console.log('Plataforma nativa do Capacitor detectada. Iniciando notificações...');
 
-  // Ouvinte: Disparado quando o usuário clica em um botão (Aprovar/Negar)
-  PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
-    console.log('Ação da notificação:', action);
+    // Pega o plugin de Notificações DEPOIS de verificar
+    const { PushNotifications } = capacitor.Plugins;
 
-    const acaoID = action.actionId;
-    const votacaoId = action.notification.data.votacaoId; // Pega o ID da votação
+    // Função principal para iniciar tudo
+    async function iniciarNotificacoes() {
+        
+        // 2. Pedir permissão ao usuário
+        let permStatus = await PushNotifications.checkPermissions();
+        if (permStatus.receive === 'prompt') {
+            permStatus = await PushNotifications.requestPermissions();
+        }
+        if (permStatus.receive !== 'granted') {
+            console.error('Permissão de notificação negada!');
+            return;
+        }
 
-    if (!votacaoId) return;
+        // 3. Registrar os botões de ação (Aprovar/Negar)
+        await PushNotifications.registerActionTypes({
+            types: [
+                {
+                    id: 'VOTACAO_TRANSAO', // ID do tipo de notificação
+                    actions: [
+                        { id: 'aprovar_voto', title: 'Aprovar' },
+                        { id: 'negar_voto', title: 'Negar', destructive: true }
+                    ]
+                }
+            ]
+        });
 
-    if (acaoID === 'aprovar_voto') {
-      console.log(`Voto APROVADO para votação ${votacaoId}`);
-      // Envie para seu servidor que este usuário APROVOU
-      // Ex: fetch(`/api/registrar_voto.php?id=${votacaoId}&voto=aprovar`);
-      
-    } else if (acaoID === 'negar_voto') {
-      console.log(`Voto NEGADO para votação ${votacaoId}`);
-      // Envie para seu servidor que este usuário NEGOU
-      // Ex: fetch(`/api/registrar_voto.php?id=${votacaoId}&voto=negar`);
+        // 4. Registrar o dispositivo no Firebase
+        await PushNotifications.register();
+        
+        // 5. Adicionar "Ouvintes" (Listeners)
+        
+        // Ouvinte: Pega o token e salva no BD
+        PushNotifications.addListener('registration', (token) => {
+            console.log('Token do dispositivo:', token.value);
+            
+            fetch('assets/php/salvar_token_push.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: token.value })
+            })
+            .then(res => res.json())
+            .then(data => console.log('Token salvo:', data))
+            .catch(err => console.error('Erro ao salvar token:', err));
+        });
+
+        // Ouvinte: Lida com a resposta do usuário
+        PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+            console.log('Ação da notificação:', action);
+            const acaoID = action.actionId;
+            const votacaoId = action.notification.data.votacaoId;
+
+            if (!votacaoId) return;
+
+            let votoUrl = (acaoID === 'aprovar_voto') 
+                ? `assets/php/registrar_voto.php?id=${votacaoId}&voto=aprovar`
+                : `assets/php/registrar_voto.php?id=${votacaoId}&voto=negar`;
+
+            // (Você precisará criar este 'registrar_voto.php')
+            // fetch(votoUrl);
+
+            // Por enquanto, apenas recarrega a página da comunidade
+            window.location.href = 'minha_comunidade.php'; 
+        });
+
+        // Ouvinte: Notificação recebida com app aberto
+        PushNotifications.addListener('pushNotificationReceived', (notification) => {
+            console.log('Notificação recebida com app aberto:', notification);
+            // Aqui você pode mostrar um popup/modal customizado
+            alert(`Nova votação: ${notification.body}`);
+        });
     }
-  });
 
-  // Ouvinte (Opcional): Disparado se a notificação chegar
-  // enquanto o usuário está COM O APP ABERTO.
-  PushNotifications.addListener('pushNotificationReceived', (notification) => {
-    console.log('Notificação recebida com app aberto:', notification);
-    // Aqui você pode mostrar um popup/modal customizado
-    // dentro do seu site, já que o usuário já está vendo.
-    alert(`Nova votação: ${notification.body}`);
-  });
+    // Chame a função principal
+    iniciarNotificacoes();
+
+} else {
+    // Se entramos aqui, é porque o site está em um NAVEGADOR NORMAL.
+    // Não fazemos nada e o site carrega normalmente.
+    console.log('Nenhuma plataforma Capacitor detectada (rodando em browser). Notificações puladas.');
 }
-
-// Chame a função principal
-// (Certifique-se de importar o Capacitor JS no seu HTML)
-// <script src="capacitor.js"></script> 
-// (Seu app híbrido com server.url injeta isso automaticamente)
-const { PushNotifications } = capacitor.Plugins;
-iniciarNotificacoes();
 (function () {
   "use strict";
 
